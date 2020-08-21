@@ -1,0 +1,21 @@
+#队列，先进先出（FIFO）
+#堆栈，后进先出（LIFO）
+queue = ['first','second','third']
+#返回队列首部的元素
+queue.pop(0)
+#清空列表
+del queue[:]
+#删除整个列表
+del queue
+#元组：（）tuple,元组是不可变的，不能给元组的独立元素赋值
+#字符串：‘’string，
+#列表：[]list，
+#集合：{}set,集合是一个包含不同元组的无序集。基本功能包括关系测试和剔除重复记录。支持数学操作：联合，交，差，对称差
+#创建空集合必须使用set()而不是{}
+#字典：{key:value,key:value}dictionary
+dictionary = {key1:value1,key2:value2}
+for i,j in dictionary.items():
+  print(i,j)
+#比较操作符in和not in检查某个值是否存在于某个序列
+#在脚本中执行模块test.py
+python test.py
