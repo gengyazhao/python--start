@@ -19,3 +19,5 @@ for i,j in dictionary.items():
 #比较操作符in和not in检查某个值是否存在于某个序列
 #在脚本中执行模块test.py
 python test.py
+#导入切运行
+$ python test.py
