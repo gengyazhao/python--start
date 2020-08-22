@@ -1,0 +1,9 @@
+#repr('hello') 相当于print（r'hello'）
+for i in range(1,10):
+    print('{0:4d}{1:4d}{2:4d}'.format(i,i*i,i*i*i))
+
+#rjust(),ljust(),center()。这三个都是字符串对象可以调用的方法，rjust()作用是在字符串左侧填充指定宽度的空格使其右对齐
+#zfill()，在数字字符串左侧填充0到指定宽度
+#str.format()
+print('We are the {0} who say "{1}!"'.format('knights','ni'))
+#结果：We are the knights who say "ni!"
