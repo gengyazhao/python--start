@@ -1,0 +1,13 @@
+import time
+t = time.localtime()
+print(t)
+t1 = time.localtime()[0]
+print(t1)
+ti = time.strftime('%Y年-%m月-%d日 %H:%M:%S',time.localtime())
+print(ti)
+'''
+显示结果：
+2021
+time.struct_time(tm_year=2021, tm_mon=6, tm_mday=3, tm_hour=14, tm_min=43, tm_sec=17, tm_wday=3, tm_yday=154, tm_isdst=0)
+2021年-06月-03日 14:43:17
+'''
