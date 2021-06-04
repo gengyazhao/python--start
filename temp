@@ -1,0 +1,6 @@
+s = 'Abcdef@baidu.com'
+p = re.compile(r'(?P<abc>\w+)@\w+')
+# p = re.compile(r'(?P<abc>\w+)@(?P=abc)')
+# p = re.compile(r'(?P<abc>\w+)@\1')
+m = p.search(s)
+print(m)
