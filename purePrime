@@ -1,0 +1,26 @@
+# 纯质数   如果一个正整数只有1和它本身两个约束，则成为一个质数（又称素数）。
+#如果一个质数的所有十进制位数都是质数，我们称它为纯质数。
+#先判断构成正整数的每个数字是否是质数，再判断这个正整数是否是质数。结果1903
+import math
+import re
+count = 0
+n = 20210605
+# num 储存质数
+num = []
+# i 待判断自然数
+r = re.compile(r'^[2357]+$')
+for i in range(2,n):
+    if r.search(str(i)):
+        m = int(math.sqrt(i))
+        for j in range(2,m+1):
+            if i % j == 0:
+                break
+            elif j == m:
+                num.append(i)
+                print(i)
+            else:
+                continue
+    else:continue
+num.append(2)
+num.append(3)
+print(len(num))
