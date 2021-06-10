@@ -1,0 +1,17 @@
+查看已安装python库
+pip list
+
+import sys
+k = sys.modules.keys()
+v = sys.modules.values()
+字典key为库名，value为路径
+
+使用cmd命令行设置Python所引用的镜像站网址
+pip config set global.trusted-host cmc-cd-mirror.rnd.huawei.com
+pip config set global.index-url http://cmc-cd-mirror.rnd.huawei.com/pypi/simple/
+
+查看pip版本：pip –V
+可能提示需要升级pip版本，升级命令：python -m pip install --upgrade pip
+
+下载Chrome浏览器版本适配的chromedriver.exe，下载网址：http://chromedriver.storage.googleapis.com/index.html
+下载后拷贝到浏览器chrome.exe所在的文件夹下，一般为C:\Program Files (x86)\Google\Chrome\Application
