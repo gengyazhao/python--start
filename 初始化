@@ -10,6 +10,8 @@ v = sys.modules.values()
 pip config set global.trusted-host cmc-cd-mirror.rnd.huawei.com
 pip config set global.index-url http://cmc-cd-mirror.rnd.huawei.com/pypi/simple/
 
+Writing to C:\Users\Administrator\AppData\Roaming\pip\pip.ini
+
 查看pip版本：pip –V
 可能提示需要升级pip版本，升级命令：python -m pip install --upgrade pip
 
