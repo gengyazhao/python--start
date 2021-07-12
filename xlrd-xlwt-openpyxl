@@ -1,0 +1,21 @@
+openpyxl：对xlsx、xlsm、xltx、xltm文件进行读、写操作（支持Excel 2010文档，不支持Office2003 的 xls 格式的Excel文档）
+xlrd：读取 Excel文件数据，支持xls、xlsx格式
+xlwt：对excel进行修改操作，但不支持对xlsx格式的修改
+
+cell(row, column, value)    写入数据，三个参数分别是行，列，值
+cell(row, column).value    获取指定单元格的值，两个参数分别是行，列
+workbook.remove('表单名')    删除表单
+del workbook['表单名']    删除表单
+workbook.save('文件名')    保存工作簿
+sheet.max_row    获取表单数据的总行数
+sheet.max_column    获取表单数据的总列数
+sheet.rows    获取按行所有的数据
+sheet.columns    获取按列所有的数据
+
+WorkBook：工作簿对象
+Sheet：表单对象
+Cell：表格对象
+# 创建一个工作簿
+wb = openpyxl.Workbook()
+# 写入一个数据
+sheet.cell(row=1, column=1, value="python")
