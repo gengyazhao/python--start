@@ -62,5 +62,14 @@ datas = [
 ]
 active_sheet.append(datas)
 
-#保存文件
+# 保存文件
 active_table.save('xxx.xlsx')
+
+# 获取第一列数据的值
+row_list = active_sheet.rows
+for i in row_list:
+  print(i[0].value)
+# 获取第一行数据的值
+column_list = active_sheet.columns
+for j in column_list:
+    print(j[0].value)
