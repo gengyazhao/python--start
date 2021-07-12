@@ -1,0 +1,66 @@
+# _*_ coding: UTF-8 _*_
+# pip install openpyxl
+# openpyxl 支持xlsx格式
+from openpyxl import load_workbook
+excel_path = r''
+sheet_name = r""
+
+active_table = load_workbook(excel_path)
+active_sheet = active_table.get_sheet_by_name(sheet_name)
+
+# 获取所有sheet名（返回一个列表）
+sheets = active_table.get_sheet_names()
+
+# 获取单元格
+# 通过sheet[列行名]获取
+a = active_sheet['A2']
+# 通过sheet.cell(row,column)获取
+b = active_sheet.cell(1,2)  #即active_sheet['B1']
+
+# 获取单元格内容
+value = a.value
+
+# 获取最大列和最大行
+r = active_sheet.max_row
+c = active_sheet.max_column
+
+# 通过list(sheet.rows)index 对某一列或行进行遍历，注意sheet.rows或sheet.columns是生成器类型，不能直接调用，需要将其转化为一个List类型，然后通过索引遍历
+# 对某一行进行遍历
+for cell in list(active_sheet.rows)[0]:
+  print(cell.value)
+# 对某一单元格范围进行遍历
+for spaces in active_sheet['A1':'B2']:
+  for cell in spaces:
+  print(cell.value)
+  
+ # 对行进行遍历，输出A1,B1,C1
+ for row in active_sheet.rows:
+  for cell in row:
+    print(cell.value)
+  # 对列进行遍历，输出A1,A2,A3
+  for column in active_sheet.columns:
+    for cell in column:
+      print(cell.value)
+
+# 新建一个Excel表格
+new_table = openpyxl.Workbook()
+
+# 写入单元格
+# 直接赋值
+active_sheet['A1'].value = 2
+# 公式赋值
+active_sheet['A6'].value = '=SUM(A1:A5)'
+
+# 写入一行或多行
+# 写入一行
+data = [1,2,3]
+active_sheet.append(data)
+# 写入多行
+datas = [
+['ID','Name','year']
+['001'],'Tom','25']
+]
+active_sheet.append(datas)
+
+#保存文件
+active_table.save('xxx.xlsx')
