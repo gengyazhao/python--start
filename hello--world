@@ -1,0 +1,86 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2020/8/10
+# @File: login
+#
+#
+__author__ = 'gyz'
+import telnetlib
+import time
+import xlrd
+
+#需要备份的交换机文件目录，第一列为交换机远程登录IP，第二列为交换机IP对应的交换机名称
+dir = r'D:\Users\pbalongnw\PycharmProjects\auto_telnet\switch_information.xlsx'
+
+#交换机信息表的名称
+sheet_name = r'switch_info'
+
+# 本机IP
+localhostIP = 'x.x.x.x'
+
+# 交换机密码
+pw = '*****'
+
+# FTP用户名
+user = 'xxx'
+
+# FTP密码
+password = 'xxx'
+
+data = xlrd.open_workbook(dir)
+
+# table = data.sheets()[0]#取第一个活动表
+table = data.sheet_by_name(sheet_name)
+
+# 行数
+nrows = table.nrows
+# print(nrows)
+
+#取某一个表格的文本，但不是string类型，用values取值
+# print(table.cell(1,0))
+
+# 列数
+ncols = table.ncols
+# print(ncols)
+
+# 按行返回数组
+# for i in range(nrows):
+#     print(table.row_values(i))
+
+# 按列返回数组
+# for j in range(ncols):
+#     print(table.col_values(j))
+
+# 获取第一列数组
+# nrows_value = table.col_values(0)
+
+# 获取第二列数组
+# nrows_value = table.col_values(1)
+
+ip_list = table.col_values(0)
+name_list = table.col_values(1)
+num = len(ip_list)
+def telnetip(ip,name):
+    tel = telnetlib.Telnet(ip,port=23,timeout=50)
+    tel.read_until('Password:')
+    tel.write('%s\n' %pw)
+    time.sleep(1)
+    tel.write('sa vrpcfg.zip\n')
+    tel.write('y"\n')
+    tel.write('y\n')
+    tel.write('ftp %s\n' %localhostIP)
+    tel.read_until('User(%s:(none)):' %localhostIP)
+    tel.write('%s\n' %user)
+    tel.read_until('Enter password:')
+    tel.write('%s\n' %password)
+    tel.read_until('[ftp]')
+    tel.write('put vrpcfg.zip %s.zip\n' %name)
+    tel.read_until('[ftp]')
+    tel.write('quit\n')
+    tel.write('quit\n')
+    res = tel.read_very_eager()
+    # print(res)
+    tel.close()
+for i in range(num):
+    telnetip(ip_list[i],name_list[i])
+    i = i + 1
