@@ -1,0 +1,46 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/5
+# @File: detect_hosts
+# 打包命令pyinstaller -F package$NAME
+#
+
+'''
+请求超时
+传输失败
+100%丢失
+
+无法访问目标主机
+字节=32 时间
+0% 丢失
+
+
+使用os.popen()执行命令cmd，然后返回一个结果文件
+commands.getoutput(cmd) 只返回执行的结果，忽略返回值
+os.system返回脚本的退出状态码
+'''
+__author__ = 'gyz'
+import os
+import time
+import threading
+
+path = os.getcwd()
+path_log = path + r'\log.txt'
+device_ip = path + r'\device_ip.txt'
+count = 0
+t = time.ctime().__str__()
+
+def ping(ip):
+    cmd = "ping " + ip
+    res = os.popen(cmd)
+    flag = res.read().find('字节=32')
+    if flag != -1:
+        print( ip + "主机连接正常")
+    else:
+        print('fail!')
+with open(r'%s' %device_ip,'r',encoding='utf-8') as ip_list:
+    for ip in ip_list:
+        ip = ip.strip()
+        thread = threading.Thread(target=ping,args=(ip,))
+        thread.start()
+        thread.join()
