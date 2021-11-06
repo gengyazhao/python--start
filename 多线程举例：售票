@@ -1,0 +1,36 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/6
+# @File: sellTickets
+# 打包命令pyinstaller -F package$NAME
+#
+__author__ = 'gyz'
+import threading
+import time
+
+N = 100
+lock = threading.Lock()
+
+def Sell(name):
+    global N
+    while True:
+        lock.acquire()
+        try:
+            if N > 0:
+                time.sleep(0.1)
+                print("{}卖出第{}张票！ \n" .format(name,N))
+                N = N  - 1
+        finally:
+            lock.release()
+def main():
+    threads = {}
+    for i in ('A','B'):
+        t = threading.Thread(target=Sell,args=(i,))
+        threads[i]=t
+    for i in ("A","B"):
+        threads[i].start()
+    for i in ("A","B"):
+        threads[i].join()
+    print('end')
+if __name__ == '__main__':
+    main()
