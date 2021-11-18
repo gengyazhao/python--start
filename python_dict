@@ -1,0 +1,62 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/18
+# @File: python_dict
+# 打包命令pyinstaller -F package\python_dict
+#
+__author__ = 'gyz'
+'''
+字典是另一种可变容器模型，且可存储任意类型对象。
+字典的每个键值 key=>value 对用冒号 : 分割，每个对之间用逗号(,)分割，整个字典包括在花括号 {} 中 ,格式如下所示：
+d = {key1 : value1, key2 : value2, key3 : value3 }
+不允许同一个键出现两次。创建时如果同一个键被赋值两次，后一个值会被记住
+键必须不可变，所以可以用数字，字符串或元组充当，而用列表就不行
+emptyDict = {}      使用大括号 { } 创建空字典
+emptyDict = dict()  使用内建函数 dict() 重建字典
+
+len(dict)       计算字典元素个数，即键的总数。
+str(dict)       输出字典，可以打印的字符串表示。
+radiansdict.clear()     删除字典内所有元素
+radiansdict.copy()      返回一个字典的浅复制
+radiansdict.fromkeys(seq, value)  创建一个新字典，以序列seq中元素做字典的键，value为字典所有键对应的初始值
+radiansdict.get(key, default=None)      返回指定键的值，如果键不在字典中返回 default 设置的默认值
+key in dict             如果键在字典dict里返回true，否则返回false
+radiansdict.items()     以列表返回一个视图对象
+radiansdict.keys()      返回一个视图对象
+radiansdict.values()    返回一个视图对象
+radiansdict.setdefault(key, default=None)       和get()类似, 但如果键不存在于字典中，将会添加键并将值设为default
+radiansdict.update(dict2)       把字典dict2的键/值对更新到dict里
+pop(key[,default])              删除字典给定键 key 所对应的值，返回值为被删除的值。key值必须给出。 否则，返回default值。
+popitem()               随机返回并删除字典中的最后一对键和值。
+
+'''
+list1 = ['eg1','eg2']
+#访问字典里的值
+dict1 = {'gyz':'gengyazhao'}
+print(dict1['gyz'])
+#更新信息
+dict1['gyz'] = 'huawei.com'
+print(dict1['gyz'])
+#添加信息
+dict1['bd'] = 'baidu.com'
+print(dict1['bd'])
+dict2 = dict1.copy()
+#删除字典元素
+del dict1['gyz']
+#清空字典
+dict1.clear()
+#删除字典
+del dict1
+
+print(dict2.keys())
+print(dict2.values())
+print(dict2.items())
+dict3 = dict2.fromkeys(dict2,'qq.com')
+print(dict3.keys())
+print(dict3.values())
+
+dict4 = dict.fromkeys(list1)
+print(dict4.keys())
+dict2.update(dict4)
+print(dict2.keys())
+print(dict2.values())
