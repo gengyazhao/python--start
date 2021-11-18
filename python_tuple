@@ -1,0 +1,28 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/18
+# @File: python_tuple
+# 打包命令pyinstaller -F package\python_tuple
+#
+__author__ = 'gyz'
+'''
+in
++*
+Python 的元组与列表类似，不同之处在于元组的元素不能修改。
+元组使用小括号 ( )，列表使用方括号 [ ]。
+tup = ()        创建空元组
+元组中只包含一个元素时，需要在元素后面添加逗号 , ，否则括号会被当作运算符使用
+元组与字符串类似，下标索引从 0 开始，可以进行截取，组合等
+元组可以使用下标索引来访问元组中的值
+tup1 = ('Google', 'Runoob', 1997, 2000)
+tup2 = (1, 2, 3, 4, 5, 6, 7 )
+print ("tup1[0]: ", tup1[0])
+print ("tup2[1:5]: ", tup2[1:5])
+
+元组中的元素值是不允许删除的，但我们可以使用del语句来删除整个元组
+del tup
+
+tuple(iterable)     将可迭代list转换为元组。
+
+
+'''
