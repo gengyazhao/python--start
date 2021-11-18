@@ -1,0 +1,9 @@
+__author__ = 'Administrator'
+animals = ['apple','banana','huawei']
+for x in enumerate(animals):
+    print(x)
+
+dict1 = {'apple':'100', 'banana':'20'}
+
+for x in enumerate(dict1):
+    print(x)
