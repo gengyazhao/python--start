@@ -1,0 +1,90 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/18
+# @File: python_set
+# 打包命令pyinstaller -F package\python_set
+#
+__author__ = 'gyz'
+'''
+集合（set）是一个无序的不重复元素序列
+可以使用大括号 { } 或者 set() 函数创建集合，注意：创建一个空集合必须用 set() 而不是 { }，因为 { } 是用来创建一个空字典
+parame = {value01,value02,...}
+或者parame = set((value01,value02,...))
+
+s.add( x )      添加元素,将元素 x 添加到集合 s 中，如果元素已存在，则不进行任何操作
+s.update( x )   也可以添加元素，且参数可以是列表，元组，字典等
+s.remove( x )   移除元素,将元素 x 从集合 s 中移除，如果元素不存在，则会发生错误。
+s.discard( x )  也是移除集合中的元素，且如果元素不存在，不会发生错误
+s.pop()         随机删除集合中的一个元素
+len(s)          计算集合 s 元素个数。
+s.clear()       清空集合
+x in s          判断元素 x 是否在集合 s 中，存在返回 True，不存在返回 False
+copy()          拷贝一个集合
+set.difference(set)     返回一个移除相同元素的新集合
+difference_update()	   直接在原来的集合中移除相同元素，没有返回值
+
+set.intersection(set1, set2 ... etc)    返回两个或更多集合中都包含的元素，即交集。
+union()         返回两个集合的并集
+symmetric_difference()	返回两个集合中不重复的元素集合
+
+intersection_update()	返回集合的交集。
+isdisjoint()    判断两个集合是否包含相同的元素，如果没有返回 True，否则返回 False。
+issubset()      判断指定集合是否为该方法参数集合的子集。
+issuperset()    判断该方法的参数集合是否为指定集合的子集
+symmetric_difference_update()	    移除当前集合中在另外一个指定集合相同的元素，并将另外一个指定集合中不同的元素插入到当前集合中
+
+类似列表推导式，同样集合支持集合推导式
+a = {x for x in 'abracadabra' if x not in 'abc'}
+a = {'r', 'd'}
+
+
+'''
+
+set1 = {'apple', 'orange', 'apple', 'pear', 'orange', 'banana'}
+set2 = set(('apple', 'orange', 'apple', 'pear', 'orange', 'huawei.com'))
+if 'apple' in set1:
+    print('apple is in set1')
+
+set3 = set1.difference(set2)
+for i in set3:
+    print('here is set3')
+    print(i)
+set4 = set2.difference(set1)
+for i in set4:
+    print('here is set4')
+    print(i)
+
+for i in set1.intersection(set2):
+    # print('intersection()	返回集合的交集')
+    print(i)
+
+# intersection(set)，set 参数可以不是集合，可以是任何序列。
+list1 = ['apple', 'orange', 'apple', 'pear', 'orange', 'banana']
+x = set1.intersection(list1)
+print(x)
+
+tuple1 = ('apple', 'orange', 'apple', 'pear', 'orange', 'banana')
+x = set1.intersection(tuple1)
+print(x)
+
+str1 = 'apple'
+x = set1.intersection('pear')
+print(len(x))
+
+# 对字典则是与字典的 key 值比较
+dict1 = {'apple':'10元','pear':'8元'}
+x = set1.intersection(dict1)
+print(x)
+
+set5 = set1.copy()
+set6 = set2.copy()
+set5.intersection_update(set6)
+for x in set5:
+    print(x)
+
+# isdisjoint()没有相同的元素返回 True，
+if set1.isdisjoint(set2):
+    print('set1 and set2 不具有相同的元素')
+else:
+    print('set1 and set2 具有相同的元素')
+    
