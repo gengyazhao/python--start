@@ -1,0 +1,46 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/22
+# @File: multiprocessing_ssh
+# 打包命令pyinstaller -F package\multiprocessing_ssh
+#多进程 & 多线程
+__author__ = 'gyz'
+from Switch9312 import Switch9312
+from multiprocessing import cpu_count,Pool as ProcellPool
+from multiprocessing.pool import ThreadPool
+from multiprocessing import freeze_support
+
+results = []
+ip_list = ['x.x.x.x','x.x.x.x']
+commands = ['sys\n','display esn\n']
+def mult_process(ip_list, commands):
+    freeze_support()
+    #获取内核数
+    cpus = cpu_count()
+    #有效控制并发进程或者线程数，默认为内核数
+    pool = ProcellPool(cpus)
+    #设置对应函数和传入的参数
+    for ip in ip_list:
+        result = pool.apply_async(Switch9312(ip, commands).ssh_multicmd())
+        results.append(result)
+
+    pool.close()
+    pool.join()
+    # for info in results:
+    #     print(info.get())
+
+def multi_thread(ip_list, commands):
+    pool = ThreadPool(100)
+    for ip in ip_list:
+        result = pool.apply_async(Switch9312(ip, commands).ssh_multicmd())
+        results.append(result)
+    pool.close()
+    pool.join()
+    # for info in results:
+    #     print(info.get())
+
+if __name__ == "__main__":
+    #多线程
+    multi_thread(ip_list, commands)
+    #多进程
+    mult_process(ip_list, commands)
