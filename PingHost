@@ -1,0 +1,22 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/22
+# @File: 
+# 打包命令pyinstaller -F package\test
+#参数定义在__init__函数中
+__author__ = 'gyz'
+import os
+class PingHost:
+    def __init__(self,ip):
+        self.ip = ip
+    def ping(self):
+        cmd = 'ping ' + self.ip
+        res = os.popen(cmd)
+        res_str = res.read()
+        flag = 'TTL='
+        if flag in res_str:
+            print("%s 主机连接正常" % (self.ip))
+        else:
+            print("%s 主机连接failed" % (self.ip))
+
+
