@@ -15,7 +15,7 @@ import gevent
 from gevent import monkey
 
 monkey.patch_all()
-ip_list = ['20.20.128.108','20.20.144.109']
+ip_list = ['x.x.x.x','x.x.x.x']
 commands = ['sys\n','display esn\n']
 # sw = Switch9312(ip,commands)
 # sw.ssh_multicmd()
