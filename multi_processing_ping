@@ -1,0 +1,30 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/22
+# @File: multi_processing_ping
+# 打包命令pyinstaller -F package\multi_processing_ping
+#
+__author__ = 'gyz'
+from PingHost import PingHost
+from multiprocessing import cpu_count,Pool as ProcessPool
+from multiprocessing.pool import ThreadPool
+from multiprocessing import freeze_support
+ip_list = ['1.1.1.1','2.2.2.2','3.3.3.3','4.4.4.4']
+def multi_process(ip_list):
+    freeze_support()
+    cpus = cpu_count()
+    pool = ProcessPool(cpus)
+    for ip in ip_list:
+        pool.apply_async(PingHost(ip).ping())
+    pool.close()
+    pool.join()
+def multi_thread(ip_list):
+    pool = ThreadPool(100)
+    for ip in ip_list:
+        pool.apply_async(PingHost(ip).ping())
+    pool.close()
+    pool.close()
+
+if __name__ == "__main__":
+    multi_thread(ip_list)
+    # multi_process(ip_list)
