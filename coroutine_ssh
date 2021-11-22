@@ -1,0 +1,32 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/19
+# @File: coroutine_ssh.py
+# 打包命令pyinstaller -F package\coroutine_ssh.py
+#同一目录下python import报错问题
+# 右键点击文件夹Mark directory As 把该文件夹标记为Sources root就可以了。
+#x = sys.argv[0]        本文件绝对路径
+#y = sys.path           导入文件搜索路径列表【】
+__author__ = 'gyz'
+import sys
+from Switch9312 import Switch9312
+import test
+import gevent
+from gevent import monkey
+
+monkey.patch_all()
+ip_list = ['20.20.128.108','20.20.144.109']
+commands = ['sys\n','display esn\n']
+# sw = Switch9312(ip,commands)
+# sw.ssh_multicmd()
+def get_ssh_result(ip):
+    print("start ",ip)
+    result = Switch9312(ip,commands).ssh_multicmd()
+    print("end ",ip)
+    return result
+
+tasks = [gevent.spawn(get_ssh_result,i) for i in ip_list]
+all_result = gevent.joinall(tasks)
+
+for x in all_result:
+    print(x.get())
