@@ -1,7 +1,7 @@
 __author__ = 'gyz'
 # _*_ coding: UTF-8 _*_
 # @create_time:2021/11/19
-# @File: coroutine_ssh.py
+# @File: coroutine_ssh.py   协程
 # 打包命令pyinstaller -F package\coroutine_ssh.py
 #同一目录下python import报错问题
 # 右键点击文件夹Mark directory As 把该文件夹标记为Sources root就可以了。
