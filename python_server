@@ -1,0 +1,28 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/22
+# @File: python_server
+# 打包命令pyinstaller -F package\python_server
+#
+__author__ = 'gyz'
+import socket
+
+
+class server_class:
+    def build_listen(self):
+        server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        server_socket.bind(('127.0.0.1',9999))
+        server_socket.listen(5)
+        while True:
+            client_socket,addr = server_socket.accept()
+
+            msg = client_socket.recv(1024).decode("utf-8")
+            # print(f"receive msg from client {addr}:{msg}")
+            print("receive msg from client %s: %s" % (addr,msg))
+            msg = "yes , you have client_socketect with server.\r\n".encode("utf-8")
+            client_socket.send(msg)
+            client_socket.close()
+
+if __name__ == "__main__":
+    server = server_class()
+    server.build_listen()
