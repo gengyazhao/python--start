@@ -1,0 +1,33 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/11/22
+# @File: python_server_ssl
+# 打包命令pyinstaller -F package\python_server_ssl
+#
+__author__ = 'gyz'
+
+import socket
+import ssl
+
+class server_ssl:
+    def build_listen(self):
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.load_cert_chain('cert/server.crt', 'cert/server_rsa_private.pem.unsecure')
+
+        with socket.socket(socket.AF_INET,socket.SOCK_STREAM,0) as sock:
+            sock.bind(('127.0.0.1,9443'))
+            sock.listen(5)
+            with context.wrap_socket(sock, server_side=True) as ssock:
+                while True:
+                    client_socket, addr = ssock.accept()
+                    msg = client_socket.recv(1024).decode("utf-8")
+                    # print(f"receive msg from client {addr}: {msg}")
+                    print("receive msg from client %s: %s" % (addr,msg))
+                    msg = "yes ,you have client_socketect with server.\r\n".encode("utf-8")
+                    client_socket.send(msg)
+                    client_socket.close()
+
+
+if __name__ == "__main__":
+    server = server_ssl()
+    server.build_listen()
