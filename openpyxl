@@ -20,8 +20,9 @@ b = active_sheet.cell(1,2)  #即active_sheet['B1']
 # 获取单元格内容
 value = a.value
 
-# 获取最大列和最大行
+# 获取最大行
 r = active_sheet.max_row
+# 获取最大列
 c = active_sheet.max_column
 
 # 通过list(sheet.rows)index 对某一列或行进行遍历，注意sheet.rows或sheet.columns是生成器类型，不能直接调用，需要将其转化为一个List类型，然后通过索引遍历
