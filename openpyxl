@@ -48,6 +48,7 @@ new_table = openpyxl.Workbook()
 
 # 写入单元格
 # 直接赋值
+active_sheet.cell(1,1).value = 2
 active_sheet['A1'].value = 2
 # 公式赋值
 active_sheet['A6'].value = '=SUM(A1:A5)'
