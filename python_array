@@ -6,13 +6,8 @@ __author__ = 'gyz'
 #
 __author__ = 'gyz'
 def create_array(m,n):
-    array = []
-    init = []
-    list1 = ['1'] * n
-    init.append(list1)
-    list2 = init * m
-    array.append(list2)
-    return array
+        array = [ [''] * m for i in range(n) ]
+        return array
 
 p = create_array(5,6)
-print(p[0][0][0])
+print(p)
