@@ -1,0 +1,28 @@
+__author__ = 'Administrator'
+# _*_ coding: UTF-8 _*_
+# @Create by gengyu
+# @Create Time :2021/11/30
+# @File_name : multi_threading
+
+import threading
+import os,time
+ip_list = ['192.168.31.' + str(x) for x in range(1,254)]
+
+def ping(ip):
+    time.sleep(1)
+    cmd = 'ping ' + ip
+    info = os.popen(cmd)
+    get_info = info.read()
+    print(get_info)
+
+path_base = os.getcwd()
+path_ip = path_base + r'\ip.txt'
+
+with open('%s' % path_ip, 'r',encoding='utf-8') as f:
+    ts = time.time()
+    for i in f.readlines():
+        t1 = threading.Thread(target=ping,args=(i,))
+        t1.start()
+        t1.join(1)
+    f.close()
+    print(time.time()-ts)
