@@ -1,0 +1,51 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/12/1
+# @File: detect_hosts_v5
+# 打包命令pyinstaller -F package\detect_hosts_v5
+#
+__author__ = 'gyz'
+import os,time
+import threading
+
+from multiprocessing.pool import ThreadPool
+hosts_up = []
+hosts_down = []
+threads = []
+def ping(ip):
+    cmd = 'ping -n 2 ' + ip
+    print('%s is testing' % ip)
+    res = os.popen(cmd)
+    # if 'TTL=' in res.read() :
+    k = res.read().find('TTL')
+    if k != -1 :
+        hosts_up.append(ip)
+    else:
+        hosts_down.append(ip)
+
+a = int(input("请输入实验室编号：1-11\n"))
+net_list = []
+ip_list = [net_list[a] + str(i) for i in range(1,51)]
+for ip in ip_list:
+    t = threading.Thread(target=ping, args=(ip,))
+    threads.append(t)
+#线程数
+k = 128
+m = len(threads) //  k
+n = len(threads) % k
+if m >= 1:
+    for i in range(1,m+1):
+        for thread in threads[(i-1)*k:i*k]:
+            thread.start()
+        for thread in threads[(i-1)*k:i*k]:
+            thread.join()
+    for thread in threads[k*m:k*m+n]:
+        print('1111\n')
+        thread.start()
+    for thread in threads[k*m:k*m+n]:
+        thread.join()
+else :
+    for thread in threads :
+        thread.start()
+    for thread in threads :
+        thread.join()
