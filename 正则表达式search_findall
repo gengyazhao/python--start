@@ -1,0 +1,59 @@
+#格式：pattern = re.compile('\d{m,n}\d+\d*[cC]\w+\s+')
+#group = pattern.search(string_init)
+#result_string = group[0]
+#result_list = re.split(r'\s+',result_string)#分割成列表
+#search只有一个结果，即只有group[0]；findall可以有多个结果
+#
+#
+#
+#
+#
+ver_pattern = re.compile('[ge]NodeB\s+BTS3900_5900\s+\w+')
+esn_pattern = re.compile('\d{7}\w{7}\d{6}')
+cn = 'LST CNOPERATOR:;'
+gn = 'LST GNBOPERATOR:;'
+effective_date_pattern = re.compile('\d{4}-\d{2}-\d{2}     ')
+if count == 0:
+    ver = ver_pattern.search(res)[0]
+    ver_list = re.split(r'\s+',ver)
+    ver = re.compile('[rR]\d{3}').search(ver_list[2])[0]
+    if ver_list[0] == 'eNodeB':
+        server.send(self.get_package(cn))
+    if ver_list[0] == 'gNodeB':
+        server.send(self.get_package(gn))
+
+    res_plmn = self.socket_receive(server)
+    if 'Secondary Operator' in res_plmn:
+        plmn_pattern = re.compile('\s+\d{3}\s+\d{2}')
+        plmn = plmn_pattern.search(res_plmn)[0]
+        plmn = re.compile('\d+').findall(plmn)
+        plmn = plmn[0]+plmn[1]
+    else:
+        mcc_pattern = re.compile('Mobile [cC]ountry [cC]ode\s+=\s+\d{3}')
+        mcc = mcc_pattern.search(res_plmn)[0]
+        mcc = re.compile('\d{3}').search(mcc)[0]
+        mnc_pattern = re.compile('Mobile [nN]etwork [cC]ode\s+=\s+\d{2}')
+        mnc = mnc_pattern.search(res_plmn)[0]
+        mnc = re.compile('\d{2}').search(mnc)[0]
+        plmn = mcc + mnc
+    record.append(self.ip)
+    record.append(ver_list[0])
+    record.append(ver)
+    record.append(plmn)
+    count += 1
+  elif count == 1:
+    if esn_pattern.search(res) == None:
+        print()
+        if re.compile('1234567890ABCDEFGH').search(res)[0]:
+            esn = '1234567890ABCDEFGH'
+    else:
+        esn = esn_pattern.search(res)[0]
+    record.append(esn)
+    count += 1
+  elif count == 2:
+    effective_date = effective_date_pattern.search(res)[0]
+    effective_date = effective_date.strip()
+    record.append(effective_date)
+    count += 1
+  st.append(record)
+  wb.save(result_path)
