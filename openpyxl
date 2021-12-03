@@ -75,3 +75,48 @@ for i in row_list:
 column_list = active_sheet.columns
 for j in column_list:
     print(j[0].value)
+
+#新建一个excel表格,新建表格中默认创建一个sheet，sheet名称：Sheet
+#新建时，文件在暂存区，通过save()函数给文件命名
+wb = openpyxl.Workbook()
+ws1_name = 'sheet_name1'
+ws2_name = 'sheet_name2'
+base_path = os.getcwd()
+file_path = base_path + r'\new_excel.xlsx'
+#重命名默认创建的sheet,注意大小写
+wb['Sheet'].title = ws1_name
+#创建新的sheet
+ws2 = wb.create_sheet(ws2_name)
+
+#使用sheet_name1
+ws1 = wb[ws1_name]
+titles_ws1 = ['IP','TYPE','VERSION','PLMN','ESN','EFF_DATE']
+titles_ws2 = ['可以ping通的ip','ping不通的ip','LOGIN_FAIL']
+#表格行首命名
+for i in range(1,7):
+    ws1.cell(1,i).value = titles_ws1[i-1]
+for i in range(1,4) :
+    ws2.cell(1,i).value = titles_ws2[i-1]
+#保存文件
+wb.save(file_path)
+
+#按列写入两个列表host_up[]各host_down[]
+m = len(hosts_up)
+n = len(hosts_down)
+for row in range(2,m+2):
+        st['A'+str(row)].value = hosts_up[row-2]
+#
+    for row in range(2,n+2):
+        st['B'+str(row)].value = hosts_down[row-2]
+    wb.save(result_path)
+    
+    
+    
+#某一列追加写入数据,以C列为例
+ft = wb[login_fail_sheet_name]
+for row in range(2,ft.max_row+1):
+    ccell = ft['C' + str(row)].value
+    if ccell is None:
+        ft['C' + str(row)] = self.ip
+        wb.save(file_path)
+        break
