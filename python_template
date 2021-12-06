@@ -1,0 +1,12 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By $USER
+# @Create_time: $DATE
+# @File Name: $NAME
+# 打包命令pyinstaller -F package\\$NAME
+"""
+这个模块提供了
+>>>
+"""
+__author__ = 'gyz'
