@@ -1,0 +1,32 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create by gengyu
+# @Create Time :2021/12/6
+# @File Name : get_ip
+# 打包命令 pyinstaller -F package\get_ip
+"""
+
+"""
+__author__ = 'Administrator'
+import doctest
+import os,re
+
+def gethost():
+    ipv4 = []
+    result = os.popen('ipconfig')
+    result_str = result.read()
+    ipv4_pattern = re.compile('ipv4 address[\.\s]+:\s[\d\.]+',re.I)
+    p = re.compile(r'\d+\.\d+\.\d+\.\d+')
+    ipv4_list = ipv4_pattern.findall(result_str)
+    for x in ipv4_list:
+        if p.search(x) is None:
+            print('IP Address could not be found!')
+            return
+        else:
+            ipv4.append(p.search(x)[0])
+    return ipv4
+if __name__ == "__main__":
+    doctest.testmod()
+    ipv4 = gethost()
+    print(ipv4)
