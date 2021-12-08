@@ -1,0 +1,47 @@
+__author__ = 'Administrator'
+# _*_ coding: UTF-8 _*_
+# @Create by gengyu
+# @Create Time :2021/12/5
+# @File_name : sftp
+'''
+交换机配置:
+sftp server enable
+ssh user python
+ssh user python authentication-type rsa
+ssh user python service-type sftp
+ssh user python sftp-directory cfcard:/
+ssh authorization-type default root
+dir
+Git Bash生成密钥对:
+ssh-keygen -t rsa
+Enter
+Enter
+Enter
+
+cat /c/Users/Administrator/.ssh/id_rsa.pub
+交换机添加公钥,并将公钥分配给用户:
+rsa peer-public-key rsa01 encoding-type openssh
+public-key-code begin
+公钥
+public-key-code end
+peer-public-key end
+ssh user python assign rsa-key rsa01
+
+'''
+#使用不加密公钥，为用户python分配公钥ras01
+# 下载设备配置文件vrpcfg.cfg,然后上传配置文件test.cfg
+# ssh user python assign rsa-key rsa01
+# r'C:\Users\Administrator\.ssh\id_rsa'
+
+import paramiko
+f = open(r'C:\Users\Administrator\.ssh\id_rsa','r')
+privaty_key = paramiko.RSAKey.from_private_key(f)
+f.close()
+tran = paramiko.Transport(('192.168.56.188',22))
+tran.connect(username='python',pkey=privaty_key)
+sftp = paramiko.SFTPClient.from_transport(tran)
+local_path = r'C:\Users\Administrator\.ssh\test.cfg'
+remote_path = '/vrpcfg.cfg'
+sftp.get(remote_path,local_path)
+sftp.put(local_path,'/test.cfg')
+tran.close()
