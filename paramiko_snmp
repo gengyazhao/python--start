@@ -1,0 +1,92 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create by gengyu
+# @Create Time :2021/12/6
+# @File Name : paramiko_snmp
+# 打包命令 pyinstaller -F package\paramiko_snmp
+"""
+snmp.txt内容：
+#SNMPv3配置脚本中SNMP用户名admin,密码Huawei@123
+snmp-agent usm-user v3 admin group dc-admin
+snmp-agent usm v3 admin au sha
+Huawei@123
+Huawei@123
+snmp-a usm-user v3 admin pr aes128
+Huawei@123
+Huawei@123
+snmp-agent trap source ME0/0/0
+snmp-agent mib-view included nt iso
+snmp-agent mib-view included rd iso
+snmp-agent mib-view included wt iso
+snmp-agent mib-view included iso-view iso
+snmp-agent group v3 dc-admin privacy read-view rd write-view wt notify-view nt
+
+#交换机配置：
+int vlani 1
+ip add 12.168.56.188
+int g1/0/0 
+un shutdown
+com
+ping 192.168.56.1
+
+aaa
+user-name minimum-length 1
+undo local-user policy security-enhance
+local-user geng password irreversible-cipher Huawei@123
+local-user geng service-type ssh
+local-user geng user-group manage-ug
+q
+
+stelnet server enable
+sftp server enable
+
+user-interface vty 0 4
+authentication-mode aaa
+user privilege level 3
+protocol inbound ssh
+"""
+__author__ = 'Administrator'
+import doctest
+import paramiko
+import time
+from pysnmp.hlapi import *
+
+ip = '192.168.56.188'
+username = 'geng'
+password = 'Huawei@123'
+def test_snmp():
+    ssh = paramiko.client.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.client.AutoAddPolicy())
+    ssh.connect(hostname=ip,port=22,username=username,password=password)
+    print('login successfully')
+    cli = ssh.invoke_shell()
+    cli.send('screen-length 0 temporary\n')
+    time.sleep(0.5)
+    cli.send('sys \n')
+    time.sleep(0.5)
+    f = open('snmp.txt','r')
+    snmp_config_list = f.readlines()
+    for i in snmp_config_list:
+        cli.send(i)
+        time.sleep(0.5)
+
+    UdpTransportTarget((ip,161))
+    g = getCmd(SnmpEngine(),
+    UsmUserData('geng','Huawei@123','Huawei@123',authProtocol=usmHMACSHAAuthProtocol,privProtocol=usmAesCfb128Protocol),
+                UdpTransportTarget((ip,161)),
+                ContextData(),
+                ObjectType(ObjectIdentity('SNMPv2-MIB','sysName',0)))
+    errorlndication,errorStatus,errorlndex,varBinds=next(g)
+    for i in varBinds:
+        print(i)
+        print(str(i).split('=')[1].strip())
+    dis_this = cli.recv(999999).decode()
+    print(dis_this)
+    ssh.close()
+
+
+
+if __name__ == "__main__":
+    doctest.testmod()
+    test_snmp()
