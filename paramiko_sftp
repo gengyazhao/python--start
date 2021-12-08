@@ -28,7 +28,7 @@ peer-public-key end
 ssh user python assign rsa-key rsa01
 
 '''
-#使用不加密公钥，为用户python分配公钥ras01
+#使用不加密公钥，为用户python分配公钥ras01,使用python私钥登录交换机
 # 下载设备配置文件vrpcfg.cfg,然后上传配置文件test.cfg
 # ssh user python assign rsa-key rsa01
 # r'C:\Users\Administrator\.ssh\id_rsa'
