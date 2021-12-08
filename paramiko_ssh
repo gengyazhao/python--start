@@ -1,0 +1,75 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# @Create by gengyu
+# @Create Time :2021/12/5
+# @File_name : python_ssh_paramiko
+# Paramiko SSH公钥登录华为设备
+'''
+使用paramiko SSH不加密公钥登录华为交换机
+交换机配置：
+sys
+int vlan1
+ip add 192.168.56.188 24
+q
+int g1/0/0
+un shutdown
+q
+com
+ping 192.168.56.1
+使能交换机STelnet功能，配置VTY用户界面
+stelnet server enable
+user-interface vty 0 4
+authentication-mode aaa
+protocol inbound ssh
+user privilege level 3
+q
+创建本地用户python ,将用户加入管理员组，并配置用户服务方式
+aaa
+local-user python password irreversible-cipher Huawei@123
+local-user python user-group manage-ug
+local-user python service-type ssh
+
+创建SSH用户，配置认证方式和服务方式
+ssh user python
+ssh user python authentication-type rsa
+ssh user python service-type stelnet
+windows系统下的cmd命令行是不能直接使用ssh命令的，
+所以使用Git Bash 创建RSA密钥对，并将公钥拷贝到交换机
+ssh-keygen -t rsa
+Enter
+Enter
+Enter
+目录下会生成一个私钥，一个公钥，以.pub结尾的是公钥。
+
+显示公钥
+cat /d/python/id_rsa_pwd.pub
+复制公钥
+xxxxxxx
+
+在交换机上添加公钥，并将公钥分配给用户
+rsa peer-public-key rsa01 encoding-type openssh
+public-key-code begin
+xxxxxxx
+public-key-code end
+peer-public-key end
+ssh user python assign rsa-key rsa01
+commit
+
+
+'''
+import paramiko
+import time
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+ssh.connect(hostname='192.168.56.188',port=22,username='python',key_filename=r'c:/Users/Administrator/.ssh/id_rsa.pub')
+
+cmd = ssh.invoke_shell()
+cmd.send('screen-length 0 temporary\n')
+cmd.send('dis cu\n')
+time.sleep(3)
+
+show_res = cmd.recv(999999).decode()
+print(show_res)
+ssh.close()
