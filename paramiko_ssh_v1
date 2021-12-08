@@ -1,0 +1,26 @@
+__author__ = 'Administrator'
+# _*_ coding: UTF-8 _*_
+# @Create by gengyu
+# @Create Time :2021/12/5
+# @File_name : python_ssh_paramiko
+# Paramiko SSH私钥加密登录华为设备，加密密码Hisi@2009
+import paramiko
+import time
+# ssh user python assign rsa-key rsa02
+# 'rsa_pwd'
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+with open('rsa_pwd','r') as f:
+    private_key = paramiko.RSAKey.from_private_key(f,'Hisi@2009')
+    f.close()
+ssh.connect(hostname='192.168.56.188',port=22,username='python',pkey=private_key)
+
+cmd = ssh.invoke_shell()
+cmd.send('screen-length 0 temporary\n')
+cmd.send('dis cu\n')
+time.sleep(3)
+
+show_res = cmd.recv(999999).decode()
+print(show_res)
+ssh.close()
