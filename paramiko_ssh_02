@@ -1,0 +1,69 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By gyz
+# @Create_time: 2021/12/10
+# @File Name: paramiko_rsa01
+# 打包命令pyinstaller -F package\paramiko_rsa01
+"""
+这个模块提供了SSH 连接交换机，python代码使用rsa私钥文件，交换机使用rsa公钥
+交换机配置:
+rsa peer-public-key rsa01 encoding-type openssh
+#un rsa p rsa01
+public-key-code begin
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1gLaNHwE1GEj89vTF9SeKggX80QeYBtlAorTD/STgLP58b4r+8w2IRzFhtJzvwwQ0c66vtKpALmHd2nCjFu2n+UBLIY1RE9QunTiONKom5O3B6Ki53yc0Jl2Xe4P33IIi3HaoVJAHJsHOEdv9yhAcEXw5jzcZJCWEt/I2xwtk6s6eTCpPrG7vGxcqe7t1XQxwj4MDSNbWJR/hDuwJ0cdc3LpYJG4tLBJJzJatQi9c+eovW59Yp8qkG4CfsbPQa5pw3J2sEjh2yseEpEW0Pr47+qgxXbkeC2jfis4fIxS+tAl4aSm78emlHIVGuT6bgh4/c7HUnoPbL5jztHsHQF+1 g84114734@DESKTOP-2CM3IFR
+public-key-code end
+peer-public-key end
+
+aaa
+local-user admin password irreversible-cipher Hisi@2009
+local-user admin privilege level 15
+local-user admin service-type ssh
+local-user admin user-type netmanager
+
+stelnet server enable
+ssh user admin
+ssh user admin authentication-type rsa
+ssh user admin assign rsa-key rsa01
+#undo ssh user admin assign rsa-key
+ssh user admin service-type stelnet
+
+#S5320-56C-EI-AC 必须配置user-i v 0-4之间，配置16，pubkey.get_text() != "ssh-ed25519"会报私钥非法
+user-interface vty 4
+authentication-mode aaa
+user privilege level 15
+protocol inbound ssh
+idle-timeout 0 0
+screen-length 0
+
+"""
+__author__ = 'gyz'
+import paramiko
+import time
+class Switch:
+    key_filename = r'D:\switch\ssh-keygen\rsa_admin'
+    user = 'admin'
+    def __init__(self,ip):
+        self.ip = ip
+
+    def send_command(self,cmd):
+        ssh = paramiko.SSHClient()
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(hostname=self.ip,port=22,username=self.user,key_filename=self.key_filename)
+        cli = ssh.invoke_shell()
+        cli.send('screen-length 0 temporary\n')
+        for x in cmd:
+            cli.send(x)
+            time.sleep(3)
+        result = cli.recv(999999).decode()
+        print(result)
+        ssh.close()
+
+
+
+
+if __name__ == "__main__":
+    ip = '2.2.2.2'
+    cmd = 'sys'
+    sw1 = Switch(ip)
+    sw1.send_command(cmd)
