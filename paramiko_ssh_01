@@ -1,0 +1,56 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By gyz
+# @Create_time: 2021/12/10
+# @File Name: paramiko_rsa01
+# 打包命令pyinstaller -F package\paramiko_rsa01
+"""
+这个模块提供了SSH 连接交换机，python代码使用rsa私钥文件，交换机使用rsa公钥
+交换机配置:
+rsa peer-public-key rsa01 encoding-type openssh
+public-key-code begin
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC1gLaNHwE1GEj89vTF9SeKggX80QeYBtlAorTD/STg
+  LP58b4r+8w2IRzFhtJzvwwQ0c66vtKpALmHd2nCjFu2n+UBLIY1RE9QunTiONKom5O3B6Ki53yc0Jl2X
+  e4P33IIi3HaoVJAHJsHOEdv9yhAcEXw5jzcZJCWEt/I2xwtk6s6eTCpPrG7vGxcqe7t1XQxwj4MDSNbW
+  JR/hDuwJ0cdc3LpYJG4tLBJJzJatQi9c+eovW59Yp8qkG4CfsbPQa5pw3J2sEjh2yseEpEW0Pr47+qgx
+  XbkeC2jfis4fIxS+tAl4aSm78emlHIVGuT6bgh4/c7HUnoPbL5jztHsHQF+1 rsa-key
+public-key-code end
+peer-public-key end
+
+local-user admin password irreversible-cipher Hisi@2009
+ local-user admin privilege level 15
+ local-user admin service-type ssh
+ local-user admin user-type netmanager
+
+stelnet server enable
+ssh user admin
+ssh user admin authentication-type rsa
+ssh user admin assign rsa-key rsa01
+ssh user admin service-type stelnet
+
+user-interface vty 5
+ authentication-mode aaa
+ user privilege level 3
+ protocol inbound ssh
+ idle-timeout 0 0
+ screen-length 0
+
+"""
+__author__ = 'gyz'
+import paramiko
+
+import time
+
+ssh = paramiko.SSHClient()
+ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+ssh.connect(hostname='1.1.1.1',port=22,username='admin',key_filename=r'D:\switch\ssh-keygen\rsa_admin')
+cmd = ssh.invoke_shell()
+cmd.send('screen-length 0 temporary\n')
+cmd.send('dis cu\n')
+time.sleep(3)
+
+show_res = cmd.recv(999999).decode()
+print(show_res)
+ssh.close()
