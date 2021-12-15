@@ -1,0 +1,66 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By g84114734
+# @Create_time: 2021/12/15
+# @File Name: re_test
+# 打包命令pyinstaller -F package\re_test
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+import re
+# 正则表达式的自定义命名分组,(?P<name>pattern)
+# 一个正则表达式可以有多个自定义名称的分组，可以能过分组名称提取到匹配的字符串
+# 每一个分组定义是(?P<自定义分组名称>正则字符串)
+# 例如
+# pattern=r'正则1(?P<组1>组1正则)正则2(?P<组2>组2正则)正则3(?P<组3>组3正则)'
+
+
+
+str = '''
+oracle:500,
+java:1550,
+php:500,
+<oracle>500</oracle>
+<java>1550</java>
+<java>5000</java>
+'''
+'''
+捕获命名组，不在命名组内的部分，不捕获
+'''
+ # (?P<name>...) 定义一个命名组，(?P=name) 则是对命名组的逆向引用
+s1 = re.findall(r'\D+:(?P<group_name>\d+)',str,re.I|re.S)
+s2 = re.findall(r">(?P<data>\d+)<",str,re.I|re.S)
+s3 = re.findall(r">(?:\d+)</(\w+)>",str,re.I|re.S)
+print(s1)
+#['500', '1550', '500']
+print(s2)
+#['500', '1550', '5000']
+print(s3)
+#['oracle', 'java', 'java']
+
+'''
+group和groups是两个不同的函数。
+
+一般m.group(N) 返回第N组括号匹配的字符。
+而m.group() == m.group(0) == 所有匹配的字符，与括号无关，这个是API规定的。
+
+m.groups() 返回所有括号匹配的字符，以tuple格式（元组格式），不包括m.group(0)，即整个表达式。
+m.groups() == (m.group(0), m.group(1), ...)
+'''
+# 正则表达式中，group（）用来提取分组截获的字符串
+# 有时你想用一个组去收集正则表达式的一部分，但又对组的内容不感兴趣。你可以用一个无捕获组: (?:pattern) 来实现这项功能
+# (?:pattern) ： 匹配pattern，但不捕获匹配结果
+p = re.findall(r"(?:[abc])+\d+","abc963")
+print(p)
+#['abc963']
+n = re.search("(?:[abc])+","abc963")
+print(n.group())
+#abc
+m = re.search("(?:[abc])+(\d+)","abc963")
+print(m.group())
+#abc963
+print(m.groups())
+#('963',)
