@@ -1,3 +1,106 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+import openpyxl
+import os,re
+import pathlib
+def get_type_version():
+    demo = r'''
+    Main Area     eNodeB            BTS3900_5900 V100R017C00SPC120B178  Available        2020-12-09 16:41:33
+    '''
+    #search 捕获命名组，不在命名组内的部分也捕获，
+    #findall捕获命名组，不在命名组内的部分，不捕获,返回值为列表,元素为元组
+    res1 = re.search(r'main area\s+(?P<btstype>[eg]nodeb)\s+\w+\s+v100(?P<version>r\d{3})\w+\s+available',demo,re.I)
+    print(res1)
+    # <re.Match object; span=(1, 78), match='Main Area     eNodeB            BTS3900_5900 V100>
+    print(res1.group(0))
+    # Main Area     eNodeB            BTS3900_5900 V100R017C00SPC120B178  Available
+    print(res1.groups())
+    #('eNodeB', 'R017')
+    print(res1.groups()[0])
+    # eNodeB
+    print(res1.groups()[1])
+    # R017
+
+    res2 = re.findall(r'main area\s+(?P<btstype>[eg]nodeb)\s+\w+\s+v100(?P<version>r\d{3})\w+\s+available',demo,re.I)
+    print(res2)
+    # [('eNodeB', 'R017')]
+    print(res2[0])
+    # ('eNodeB', 'R017')
+    print(res2[0][0])
+    # eNodeB
+    print(res2[0][1])
+    # R017
+
+def get_esn():
+    esn_demo = r'ESN  =  2102310WYG6TF1915394'
+    res3 = re.findall(r'esn\s+=\s+(?P<esn>\d{7}\w{7}\d{6})',esn_demo,re.I)
+    print(res3[0])
+    # 2102310WYG6TF1915394
+
+def get_edate():
+    effictive_date_demo = r'''
+    Info of NE License
+    ------------------
+    Operator Index  Operator Name  Item Type  Model         Description
+
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      0       0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      NULL    0            asdf  2022-02-24
+    65535           SHARED         NULL       SHARED  SHARED          66666      NULL    0            asdf  2022-02-24
+
+    '''
+    res4 = re.search(r'65535.+(?P<e_date>\d{4}-\d{2}-\d{2})\s+',effictive_date_demo,re.I)
+    print(res4.groups())
+    # ('2022-02-24',)
+    print(res4.groups()[0])
+    # 2022-02-24
+
+    res5 = re.findall(r'65535.+(?P<e_date>\d{4}-\d{2}-\d{2})\s+',effictive_date_demo,re.I)
+    print(res5)
+    # ['2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24', '2022-02-24']
+def get_plmn():
+    multi_plmn = r'''
+%%LST CNOPERATOR:;%%
+RETCODE = 0  Operation succeeded.
+
+List CN Operator
+----------------
+CN Operator ID  CN Operator name  CN Operator type    Mobile country code  Mobile network code  PLMN Mode    Operator Function Switch
+
+0               33026             Primary Operator    330                  26                   NULL         CELL_TRAFFIC_TRACE_MSG_SWITCH:On&DCN_SUPPORT_SWITCH:Off&MME_STRICT_SELECTION_SWITCH:Off&CMAS_BROADCAST_SWITCH:On&ARP_QCI_BASED_DIFF_SCH_SW:Off&UPPER_LYR_IND_NO_BROADCAST_SW:Off
+1               PLMN              Secondary Operator  460                  11                   NORMAL_PLMN  CELL_TRAFFIC_TRACE_MSG_SWITCH:On&DCN_SUPPORT_SWITCH:Off&MME_STRICT_SELECTION_SWITCH:Off&CMAS_BROADCAST_SWITCH:On&ARP_QCI_BASED_DIFF_SCH_SW:Off&UPPER_LYR_IND_NO_BROADCAST_SW:Off
+(Number of results = 2)
+    '''
+    plmn_demo = r'''
+    List CN Operator
+    ----------------
+              CN Operator ID  =  0
+            CN Operator name  =  46060
+            CN Operator type  =  Primary Operator
+         Mobile country code  =  460
+         Mobile network code  =  60
+                   PLMN Mode  =  NULL
+    '''
+    plmn = re.findall(r'mobile\s+country\s+code.+(?P<mcc>\d{3})\s+mobile\s+network\s+code.+(?P<mnc>\d{2})',plmn_demo,re.I)
+    print(plmn)
+    # [('460', '60')]
+    print(plmn[0][0]+plmn[0][1])
+
+get_type_version()
+
+
+
 #!/usr/bin
 # _*_ coding: UTF-8 _*_
 # Copyright (c) 2021 GengYu.All rights reserved
