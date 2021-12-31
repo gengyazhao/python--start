@@ -75,12 +75,16 @@ place()	位置；
 import tkinter
 from tkinter import *
 root = Tk()
+root.title('test for GUI')
 li = ['C','python','php','html','SQL','java']
 movie  = ['CSS','jQuery','Bootstrap']
+def change():
+    listb.insert(0,'runoob')
+
 #创建两个列表组件
 listb = Listbox(root)
 listb2 = Listbox(root)
-button1 = Button(root)
+button1 = Button(root, text='change list', bg='lightblue',width=10, command=change)
 button1.pack()
 #在第一个组件中插入数据
 for x in li:
