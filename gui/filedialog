@@ -1,0 +1,88 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2021/12/31
+# @File: excel_tools
+# 打包命令pyinstaller -F package\excel_tools
+#
+__author__ = 'gyz'
+import os
+from tkinter import *
+from tkinter import filedialog
+from openpyxl import load_workbook
+
+base_path = os.getcwd()
+file_name1 = r'\parchild.xlsx'
+file_name2 = r'\myAccount.xlsx'
+file1_path = base_path + file_name1
+file2_path = base_path + file_name2
+wb1 = load_workbook(file1_path)
+wb2 = load_workbook(file2_path)
+ws_name = 'sheet1'
+ws_result = 'Sheet2'
+sheet1 = wb1[ws_name]
+sheet2 = wb2[ws_name]
+sheet3 = wb2[ws_result]
+dict_account ={}
+dict_child = {}
+
+# for i in range(2,sheet1.max_row+1):
+#     key = sheet1.cell(i,3).value
+#     value = [sheet1.cell(i,3).value,sheet1.cell(i,1).value,sheet1.cell(i,2).value]
+#     if key in dict_child:
+#         tmp = dict_child[key]
+#         value = value + tmp
+#     dict_child.update({key:value})
+# for key in dict_child:
+#     value = list(set(dict_child[key]))
+#     dict_child.update({key:value})
+# # print(dict_child)
+# wb1.close()
+#
+# for i in range(2,sheet2.max_row+1):
+#     key = sheet2.cell(i,11).value
+#     value = i
+#     dict_account.update({key:value})
+#
+# get_repeat = []
+# for key in dict_child:
+#     flag = 0
+#     tmp = []
+#     value = dict_child[key]
+#     for x in value:
+#         if x in dict_account:
+#             flag += 1
+#             tmp.append(x)
+#     # if flag > 1:
+#     #     print(key)
+#     #     print(tmp)
+#     if flag > 1:
+#         get_repeat.append(tmp)
+# print(len(get_repeat))
+# for x in get_repeat:
+#     sheet3.append(x)
+# wb2.save(file2_path)
+# wb2.close()
+class find_InExcel:
+    def __init__(self):
+        pass
+    def get_path(self):
+        filename = filedialog.askopenfilename()
+        print(filename)
+        return filename
+    def get_paths(self):
+        filenames = filedialog.askopenfilenames()
+        print(filenames)
+        return filenames    #返回元组
+    def get_directory(self):
+        dir = filedialog.askdirectory()
+        print(dir)
+        return dir
+root = Tk()
+obj = find_InExcel()
+root.title('EXCEL TOOLS_v0.0.1 ')
+root.geometry("1068x681+200+200")
+# button1 = Button(root, text='get file', bg='lightblue', command=obj.get_directory, activebackground='green', bd=1, fg='red', height=1, width=3, padx=30, pady=15, relief=SUNKEN)
+button1 = Button(root, text='get file', bg='lightblue', command=obj.get_directory, activebackground='green', bd=1, fg='red', padx=2, pady=2, relief=SUNKEN)
+button1.pack()
+
+root.mainloop()
