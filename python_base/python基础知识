@@ -1,0 +1,5 @@
+result = not 1  or 0
+print(result)
+# try-finally 语句无论是否发生异常都将执行最后的代码。
+# not 1布尔值False,false or ,以or后面为准；当or前面是True，则以or前面为准
+# 在python中not是逻辑判断词，用于布尔型True和False，not True为False，not False为True
