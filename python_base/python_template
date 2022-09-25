@@ -1,8 +1,9 @@
 #!/usr/bin
 # _*_ coding: UTF-8 _*_
-# Copyright (c) 2021 GengYu.All rights reserved
+# Copyright (c) $YEAR GengYaZhao.All rights reserved
+#set($USER="GengYaZhao")
 # @Create By $USER
-# @Create_time: $DATE
+# @Create_time: $DATE $TIME
 # @File Name: $NAME
 # 打包命令pyinstaller -F package\\$NAME
 """
