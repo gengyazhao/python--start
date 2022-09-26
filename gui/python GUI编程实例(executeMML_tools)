@@ -1,0 +1,90 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2022 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2022/9/25
+# @File Name: myGui
+# 打包命令pyinstaller -F package\myGui
+"""
+这个模块提供了
+测试一个经典的GUI程序的写法，使用面向对象的方式
+Label标签，主要用于显示文本信息，也可以显示图像
+Label常见属性：
+width,height指定区域大小
+font指定字体和字体大小 font=(font_name,size)
+image显示在Label上的图像，目前tkinter只支持gif格式
+fg前景色，bg背景色
+justify针对多行文字的对齐，justify=left|center|right
+
+Entry 用来接收一行字符串的控件。若输入文字超出Entry控件的宽度时，文字自动向后滚动。
+Text 用来接收多行文本。
+
+"""
+__author__ = 'gyz'
+from tkinter import *
+from tkinter import messagebox
+import test_mml
+
+
+class Application(Frame):
+    """一个经典的GUI程序的类的写法"""
+
+    def __init__(self, master=None):
+    # super()代表的是父类的定义，而不是父类对象；初始化父类Frame
+        super().__init__(master)
+        self.master = master
+        self.pack()
+        self.create_widget()
+
+
+    def create_widget(self):
+        """创建组件"""
+
+        self.user_label = Label(self, text="用户名")
+        self.user_label.pack()
+        user = StringVar()
+        self.user_entry = Entry(self, textvariable=user)
+        self.user_entry.pack()
+        user.set("admin")
+
+        self.pwd_label = Label(self, text="密码")
+        self.pwd_label.pack()
+        pwd = StringVar()
+        self.pwd_entry = Entry(self, textvariable=pwd)
+        self.pwd_entry.pack()
+        pwd.set("Hisi@2009")
+
+
+        self.ip_label = Label(self, text="基站IP地址")
+        self.ip_label.pack()
+        # tkinter.BooleanVar/IntVar/DoubleVar/StringVar
+        # StringVar变量绑定到指定的组件，组件内容发生变化，StringVar变量的值也发生变化
+        ip = StringVar()
+        self.ip_entry = Entry(self, textvariable=ip)
+        self.ip_entry.pack()
+        print(ip.get())
+
+        self.mml_label = Label(self, text="MML命令")
+        self.mml_label.pack()
+        mml = StringVar()
+        self.mml_entry = Entry(self, textvariable=mml)
+        self.mml_entry.pack()
+        # print(mml.get())
+        self.execute_bt = Button(self, text="执行MMl命令", command=self.execute_mml)
+        self.execute_bt.pack()
+
+
+
+    def execute_mml(self):
+        ip = self.ip_entry.get()
+        mml = self.mml_entry.get()
+        test_mml.Bts(self.master).send_mml(ip,mml)
+
+
+
+if __name__ == '__main__':
+    root = Tk()
+    root.geometry("800x400+200+200")
+    root.title("test myGui")
+    app = Application(master=root)
+    root.mainloop()
