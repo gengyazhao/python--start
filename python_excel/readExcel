@@ -1,0 +1,47 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2023/3/23
+# @File: readExcel
+# 打包命令pyinstaller -F package$NAME
+#
+__author__ = 'gyz'
+from openpyxl import load_workbook as wb
+import os,re
+
+'''
+读取excel文件中的数据，并将其储存到dict_bts中，excel文件中第一列作为字典的key值，每行的所有数据作为字典的一个value
+'''
+base_path = os.getcwd()
+excel_path = base_path + r'\myexcel.xlsx'
+sheet_name = r'bts'
+
+active_table = wb(excel_path, data_only=True)
+active_sheet = active_table[sheet_name]
+
+#行数
+row = active_sheet.max_row
+#列数
+col = active_sheet.max_column
+
+
+#空字典，储存
+dict_bts = {}
+key_value = []
+dict_value = []
+for i in range (1,row+1):
+    value = active_sheet.cell(i,1).value
+    # print(value)
+    key_value.append(value)
+    dict_bts[value] = {value}
+
+for i in range(1,row+1):
+    for j in range(1,col+1):
+        #获取cell的值
+        value = active_sheet.cell(i,j).value
+        dict_value.append(value)
+    temp = dict_value.copy()
+    dict_bts[key_value[i-1]] = temp
+    dict_value.clear()
+# print(dict_bts.items())
+# print(dict_bts[key_value[0]][0])
+
