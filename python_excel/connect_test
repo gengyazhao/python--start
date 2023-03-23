@@ -1,0 +1,26 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By gyz
+# @Create_time: 2023/3/13
+# @File Name: connect_test
+# 打包命令pyinstaller -F package\contest
+
+"""
+pip install PyMySQL
+测试连接Mysql数据库0509
+
+
+"""
+__author__ = 'gyz'
+import pymysql
+db = pymysql.connect(host="localhost",
+                     user="root",
+                     password="xxxx",
+                     database="test",
+                     port=3306)
+cursor = db.cursor()
+cursor.execute("select version()")
+data = cursor.fetchone()
+print("DATABase version: %s" % data)
+db.close()
