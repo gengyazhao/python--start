@@ -1,0 +1,42 @@
+__author__ = 'gyz'
+# _*_ coding: UTF-8 _*_
+# @create_time:2023/4/4
+# @File: test
+# 打包命令pyinstaller -F package$NAME
+#
+__author__ = 'gyz'
+import os
+
+import re
+import platform
+
+os_type = platform.system()
+output = os.popen('ipconfig | find "以太网适配器"','r')
+net_card = output.read()
+
+res = re.findall('\w+',net_card,re.I)
+
+num = len(res)
+card_name = []
+for i in range (1,num,2):
+    card_name.append(res[i])
+
+card = input('请输入网卡名称：\n')
+ip = input('请输入IP地址：\n')
+mask = input('请输入子网掩码：\n')
+demo = r'''
+netsh interface set interface name={0} newname="{1}"
+netsh interface ip set address name="{1}" source=static addr={2} mask={3}
+
+'''
+for i in range(0,len(card_name)):
+    demo = demo.format(card_name[i],card,ip,mask)
+    print(demo)
+
+# if os_type == "Windows":
+
+#获取操作系统类型
+# print(platform.system())
+
+#获取文件绝对目录
+# print(sys.argv[0])
