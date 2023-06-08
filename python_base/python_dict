@@ -60,3 +60,72 @@ print(dict4.keys())
 dict2.update(dict4)
 print(dict2.keys())
 print(dict2.values())
+
+
+
+
+#使用变量调用字典，
+__author__ = 'g84114734'
+# _*_ coding: UTF-8 _*_
+# @CreateTime: 2020/3/3010:04
+# @File: Change_plmn
+#pyinstaller -F Change_plmn_V0.03.py
+__author__ = 'CreateBy_g84114734'
+import os
+plmn = ['11111','22222','33333','44444','5555']
+
+dict_11111 = {'sctplnk':'a', 'ippath':'f', 'sctppeer':'k', 'userpeer':'p'}
+dict_22222 = {'sctplnk':'b', 'ippath':'g', 'sctppeer':'l', 'userpeer':'q'}
+dict_33333 = {'sctplnk':'c', 'ippath':'h', 'sctppeer':'m', 'userpeer':'r'}
+dict_44444 = {'sctplnk':'d', 'ippath':'i', 'sctppeer':'n', 'userpeer':'s'}
+dict_5555 = {'sctplnk':'e', 'ippath':'j', 'sctppeer':'o', 'userpeer':'t'}
+dicts = {'dict_11111':dict_11111, 'dict_22222':dict_22222, 'dict_33333':dict_33333, 'dict_44444':dict_44444, 'dict_5555':dict_5555}
+
+str = r'''
+***************************NR侧修改脚本***************************
+MOD GNBOPERATOR: OperatorId=0,  OperatorName="{6}", Mcc="{0}", Mnc="{1}", NrNetworkingOption=SA_NSA;
+MOD USERPLANEPEER: UPPEERID=1, IPVERSION=IPv4, PEERIPV4="{2}";
+MOD IPRT: RTIDX=1, DSTIP="{2}", FORCEEXECUTE=YES;
+MOD SCTPPEER: SCTPPEERID=1, IPVERSION=IPv4, SIGIP1V4="{3}";
+MOD USERPLANEPEER: UPPEERID=2, IPVERSION=IPv4, PEERIPV4="{4}";
+MOD IPRT: RTIDX=3, DSTIP="{3}", FORCEEXECUTE=YES;
+MOD IPRT: RTIDX=4, DSTIP="{4}", FORCEEXECUTE=YES;
+RST APP: AID=1, FOCRST=YES;
+***************************------NR侧修改脚本完成------***************************
+-!-!-!-!-!-!-!-!-!-!-!-!-!-!---LTE侧修改脚本---!-!-!-!-!-!-!-!-!-!-!-!-!-!-
+MOD CNOPERATOR: CnOperatorId=0, CnOperatorName="{6}", Mcc="{0}", Mnc="{1}";
+MOD SCTPLNK: SCTPNO=0, IPVERSION=IPv4, PEERIP="{5}";
+MOD IPPATH: PATHID=0, PEERIP="{2}";
+MOD IPRT: RTIDX=0, DSTIP="{5}", FORCEEXECUTE=YES;
+MOD IPRT: RTIDX=1, DSTIP="{2}", FORCEEXECUTE=YES;
+RST APP: AID=1, FOCRST=YES;
+-!-!-!-!-!-!-!-!-!-!-!-!-!-!---LTE侧修改脚本完成---!-!-!-!-!-!-!-!-!-!-!-!-!-!-
+'''
+a = len(plmn)
+print("- - - - - - - - - - - - - - - - PLMN修改器 V0.03 - - - - - - - - - - - - - - - - \n")
+print("1. 修改为11111")
+print("2. 修改为22222")
+print("3. 修改为33333")
+print("4. 修改为11111PLMN下与SA互操作的核心网")
+# print("5. 修改为33333PLMN下与SA互操作的核心网")
+print("5. 修改为5555")
+print("6. 退出")
+
+while True:
+    num = int(input("请输入要操作的序号：\n"))
+    if num == 6:
+        break
+    if num >= 0 and num <6:
+        i = num -1
+        pl =plmn[i]
+        dic = 'dict_' + pl
+        for d in dicts.keys():
+            if dic == d:
+                dict_temp = dicts.get(d)
+                print(str.format(pl[0:3],pl[3:5],dict_temp['ippath'],dict_temp['sctppeer'],dict_temp['userpeer'],dict_temp['sctplnk'],pl))
+                break
+        # print(str.format(pl[0:3],pl[3:5],dic['ippath'],dic['sctppeer'],dic['userpeer'],dic['sctplnk'],pl))
+    else:
+        print("输入错误，请重新输入")
+
+os.system("pause")
