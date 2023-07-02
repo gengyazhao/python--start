@@ -1,0 +1,29 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/6/28 20:44
+# @File Name: ping
+# 打包命令pyinstaller -F package\ping
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import subprocess
+import time
+
+#记录开始执行的时间
+start_time = time.time()
+
+#定义用来ping的254个IP
+
+ip_list = ['1.1.1.' + str(i) for i in range(1,255)]
+
+for ip in ip_list:
+    #linux 系统将 '-n' 替换成 '-c'
+    res = subprocess.call("ping -n 2 -w 5 %s" % ip, stdout=subprocess.PIPE)
+    print(ip,True if res == 0 else False )
+
+print("执行所用时间：%s" % (time.time() - start_time))
