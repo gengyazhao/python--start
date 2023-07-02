@@ -1,0 +1,62 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/6/28 21:28
+# @File Name: PingHost
+# 打包命令pyinstaller -F package\PingHost
+"""
+这个模块提供了
+进程（process）和线程（thread）
+"""
+__author__ = 'gyz'
+
+import subprocess
+import time
+from multiprocessing import Process
+
+#定义用来ping的254个IP
+ip_list = ['1.1.1.' + str(i) for i in range(1,255)]
+
+def ping_ip():
+    for ip in ip_list:
+        # linux 系统将 '-n' 替换成 '-c'
+        res = subprocess.call("ping -n 2 -w 5 %s" % ip, stdout=subprocess.PIPE)
+        print(ip, True if res == 0 else False)
+if __name__ == '__main__':
+    process1 = Process(target=ping_ip)
+    process2 = Process(target=ping_ip)
+    process3 = Process(target=ping_ip)
+    process4 = Process(target=ping_ip)
+    process5 = Process(target=ping_ip)
+    process6 = Process(target=ping_ip)
+    process7 = Process(target=ping_ip)
+    process8 = Process(target=ping_ip)
+    process9 = Process(target=ping_ip)
+    process10 = Process(target=ping_ip)
+
+    #记录开始执行的时间
+    start_time = time.time()
+    process1.start()
+    process1.join()
+    process2.start()
+    process2.join()
+    process3.start()
+    process3.join()
+    process4.start()
+    process4.join()
+    process5.start()
+    process5.join()
+    process6.start()
+    process6.join()
+    process7.start()
+    process7.join()
+    process8.start()
+    process8.join()
+    process9.start()
+    process9.join()
+    process10.start()
+    process10.join()
+    # process1.close()
+
+    print("执行所用时间：%s" % (time.time() - start_time))
