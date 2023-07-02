@@ -1,0 +1,15 @@
+#Writing to C:\Users\Administrator\AppData\Roaming\pip\pip.ini
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+extra-index-url = https://pypi.tuna.tsinghua.edu.cn/simple/
+	https://repo.huaweicloud.com/repository/pypi/simple
+	http://pypi.douban.com/simple/
+	https://pypi.mirrors.ustc.edu.cn/simple/
+	https://pypi.org/simple/
+trusted-host = mirrors.aliyun.com
+	pypi.tuna.tsinghua.edu.cn
+	repo.huaweicloud.com
+	pypi.douban.com
+	pypi.mirrors.ustc.edu.cn
+	pypi.org
+timeout = 120
