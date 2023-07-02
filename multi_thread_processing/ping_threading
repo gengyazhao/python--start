@@ -1,0 +1,48 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/6/28 20:55
+# @File Name: ping_threading
+# 打包命令pyinstaller -F package\ping_threading
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import threading
+import subprocess
+import time
+from queue import Queue
+
+#定义工作线程数量
+WORK_THREAD = 50
+
+#将需要ping的IP 加入队列
+IP_QUEUE = Queue()
+
+for i in range(1,255):
+    IP_QUEUE.put('10.1.3.' + str(i) )
+
+#定义一个执行ping的函数
+def ping_ip():
+    while not IP_QUEUE.empty():
+        ip = IP_QUEUE.get()
+        res = subprocess.call('ping -n 2 -w 5 %s' % ip,stdout=subprocess.PIPE)
+        #打印运行结果
+        result = ip + ' ' + str(True if res == 0 else False) + '\n'
+        # print(ip,True if res == 0 else False)
+        print(result)
+
+if __name__ == '__main__':
+    threads = []
+    start_time = time.time()
+    for i in range(WORK_THREAD):
+        thread = threading.Thread(target=ping_ip)
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+    print('程序耗时：%s' % (time.time() - start_time))
