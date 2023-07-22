@@ -13,7 +13,8 @@ open(filename,mode),第一个参数是包含文件名的字符串。第二个参
 # 打包命令pyinstaller -F package\replace
 """
 这个模块提供了
-
+OSError: [Errno 22]
+#r'\rmv.txt'目录前不加r,报OSError: [Errno 22]
 """
 __author__ = 'gyz'
 import os
