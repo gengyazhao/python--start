@@ -29,3 +29,15 @@ with open(r'%s' % imsi_path ,'r',encoding='utf-8') as imsis, open(r'%s' % rmv_pa
 
 # if __name__ == '__main__':
 #     main()
+
+
+
+import os
+base_path = os.getcwd()
+imsi_path = base_path + r'\imsi.txt'
+rmv_path = base_path + r'\rmv.txt'
+# demo = r'''rmv {0} time hua zhong xing;'''
+with open(rf'{imsi_path}','r',encoding='utf-8') as imsis, open(rf'{rmv_path}', 'w', encoding='utf-8') as f:
+    for imsi in imsis:
+        imsi = imsi.strip()
+        f.write(f'rmv {imsi} time hua zhong xing;')
