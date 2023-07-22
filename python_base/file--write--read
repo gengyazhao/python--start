@@ -3,3 +3,28 @@ open(filename,mode),第一个参数是包含文件名的字符串。第二个参
 可以在常用模式后添加'b'选项从而以binary mode（二进制模式）打开文件，这时数据就是以字节码对象形式进行读写，这种模式可以用在所有非文本文件中。
 在文本模式中，在读取文件时默认会将特定平台的行结束符（Unix为\n，Windows为\r\n）转换为\n，并在写入文件时转换回去。这对文本文件是无害的，但它会破坏像JPEG或EXE文件中的二进制数据。
 在读写这类文件时，应该十分小心的使用二进制模式。
+
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/7/22 21:37
+# @File Name: replace
+# 打包命令pyinstaller -F package\replace
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+import os
+base_path = os.getcwd()
+imsi_path = base_path + r'\imsi.txt'
+rmv_path = base_path + r'\rmv.txt'
+demo = r'''rmv {0} time hua zhong xing;'''
+with open(r'%s' % imsi_path ,'r',encoding='utf-8') as imsis, open(r'%s' % rmv_path, 'w', encoding='utf-8') as f:
+    for imsi in imsis:
+        imsi = imsi.strip()
+        f.write(demo.format(imsi))
+
+# if __name__ == '__main__':
+#     main()
