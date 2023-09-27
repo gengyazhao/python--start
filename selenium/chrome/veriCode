@@ -1,0 +1,20 @@
+import ddddocr
+import PIL.Image as Image
+
+element = driver.find_element(By.XPATH,'//*[@id="tableId1"]/tbody/tr[5]/td[3]/a/img')
+driver.get_screenshot_as_file(base_path + '/screenshot.png')
+left = int(element.location['x'])
+top = int(element.location['y'])
+right = int(element.location['x'] + element.size['width'])
+bottom = int(element.location['y'] + element.size['height'])
+#通过Image处理图像
+im = Image.open(base_path + '/screenshot.png')
+im = im.crop((left, top, right, bottom))
+im.save(base_path + '/code.png')
+
+ocr = ddddocr.DdddOcr()
+with open('code.png','rb') as f:
+    img_bytes = f.read()
+res = ocr.classification(img_bytes)
+# print(res)
+driver.find_element(By.ID,"validity").send_keys(res)
