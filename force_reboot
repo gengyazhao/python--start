@@ -1,0 +1,39 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/10/11 21:22
+# @File Name: force_reboot
+# 打包命令pyinstaller -F package\force_reboot
+# pip install -r requirements.txt
+# pip freeze > d:/requirements.txt
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+import os,time,openpyxl,subprocess
+
+base_path = os.getcwd()
+server_info_path = base_path + r'\server_info.xlsx'
+ws_name1 = r'servers'
+ws_name2 = r'log'
+wb = openpyxl.load_workbook(server_info_path)
+
+def force_reboot(ip,user,pwd):
+    cmd = 'net use \\\\%s\ipc$ %s /user:%s' % (ip,user,pwd)
+    cmd1 = 'shutdown -r -m \\\\%s -t 0' % (ip)
+    cmd2 = ''
+    res = subprocess.call(cmd,stdout=subprocess.PIPE)
+    print(True if res == 0 else False)
+
+def main():
+    ip = "192.168.0.41"
+    user = "Administrator"
+    pwd = "1017"
+    force_reboot(ip,user,pwd)
+    pass
+
+
+if __name__ == '__main__':
+    main()
