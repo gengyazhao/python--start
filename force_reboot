@@ -12,14 +12,25 @@
 
 """
 __author__ = 'gyz'
-import os,time,openpyxl,subprocess
+import os,time,openpyxl,subprocess,threading
 
 base_path = os.getcwd()
 server_info_path = base_path + r'\server_info.xlsx'
 ws_name1 = r'servers'
 ws_name2 = r'log'
 wb = openpyxl.load_workbook(server_info_path)
+#存线程
+threads = []
+success = []
+fail = []
 
+def multi_thread(threads):
+    num = 128
+    ts = time.time()
+    m = len（threads） // num
+    n = len（）％ num
+    if m ＞= 1:
+        for i in range(1,m+1):
 def force_reboot(ip,user,pwd):
     cmd = 'net use \\\\%s\ipc$ %s /user:%s' % (ip,user,pwd)
     cmd1 = 'shutdown -r -m \\\\%s -t 0' % (ip)
