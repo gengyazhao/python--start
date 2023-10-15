@@ -1,0 +1,146 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/10/11 21:22
+# @File Name: force_reboot
+# 打包命令pyinstaller -F package\force_reboot
+# pip install -r requirements.txt
+# pip freeze > d:/requirements.txt
+"""
+这个模块提供了
+输入IP，用户名，密码 点击重启或关机按钮
+
+
+"""
+__author__ = 'gyz'
+import os,time,openpyxl,subprocess,paramiko
+import threading
+
+success = ['关机成功的IP']
+fail = ['关机失败的IP']
+def multi_thread(threads):
+    timeStart = time.time()
+    #线程数
+    k = 128
+    m = len(threads) // k
+    n = len(threads) % k
+    if m >=1:
+        for i in range(1,m+1):
+            for thread in threads[(i-1)*k:i*k]:
+                thread.start()
+            for thread in threads[(i-1)*k:i*k]:
+                thread.join()
+        for thread in threads[k*m:k*m+n]:
+            thread.start()
+        for thread in threads[k * m:k * m + n]:
+            thread.join()
+    else:
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+    timeEnd = time.time()
+    print("耗时%s" % (timeEnd-timeStart))
+
+
+def force_reboot(ip,user,pwd,flag):
+    # flag :windows = True;others = False,eg:ubuntu
+    if flag:
+        # for test
+        # cmd = "ping -n 2 -w 5 %s" % ip
+        cmd = 'net use \\\\%s\ipc$ %s /user:%s' % (ip,user,pwd)
+        cmd1 = 'shutdown -s -m \\\\%s -f -t 0' % (ip)
+        # 解决访问共享时提示多重连接的问题
+        cmd2 = 'net use * /del /y'
+        try:
+            res = subprocess.call(cmd, stdout=subprocess.PIPE)
+            if res == 0:
+                res1 = subprocess.call(cmd1,stdout=subprocess.PIPE)
+                success.append(ip)
+                if res1 ==0 :
+                    subprocess.call(cmd2, stdout=subprocess.PIPE)
+                else:
+                    fail.append(ip)
+                print(ip + str(True if res1 == 0 else False))
+            else:
+                fail.append(ip)
+
+        except Exception as e:
+            print("ERROR" + str(e))
+            fail.append(ip)
+            print(ip + "False")
+    else:
+        try:
+            # for test
+            # cmd = "pwd"
+            # cmd = "shutdown -h now"
+            # 一分钟后关机
+            cmd = "shutdown -h 1"
+            ssh = paramiko.SSHClient()
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            ssh.connect(hostname=ip, port=22, username=user, password=str(pwd), timeout=5)
+            stdin, stdout, stderr = ssh.exec_command(cmd, timeout=5)
+            # stdin为输入的命令
+            # stdout 为返回值
+            # stderr 为错误信息
+            res = stdout.read().decode('utf-8')
+            err = stderr.read().decode('utf-8')
+            result = res if res else err
+            print(result)
+            success.append(ip)
+            print(ip + "True")
+        except Exception as e:
+            print('ERROR' + str(e))
+            fail.append(ip)
+            print(ip + "False")
+
+def main():
+    # 线程池
+    threads = []
+    # 获取当前package所在目录
+    base_path = os.getcwd()
+    # 当前package所在目录下存储服务器信息的EXCEL表名
+    server_info_path = base_path + r'\server_info.xlsx'
+    # EXCEL文件中存储服务器信息的表格sheet
+    ws_name1 = r'servers'
+    # EXCEL文件中存储服务器关机log的表格sheet
+    ws_name2 = r'log'
+    wb = openpyxl.load_workbook(server_info_path)
+    ws1 = wb[ws_name1]
+    ws2 = wb[ws_name2]
+    row_num = ws2.max_row
+    # 是否有表头
+    tbl_head_flag = True
+    for row in ws1.rows:
+        if tbl_head_flag:
+            tbl_head_flag = False
+        else:
+            ip = row[0].value
+            user = row[1].value
+            pwd = row[2].value
+            system_type = str(row[3].value)
+            if 'indows' in system_type:
+                flag = True
+            else:
+                flag = False
+            # print(flag)
+            # print(ip)
+            # print(user)
+            # print(pwd)
+            t = threading.Thread(target=force_reboot,args=(ip,user,pwd,flag,))
+            threads.append(t)
+    multi_thread(threads)
+    x = len(success)
+    y = len(fail)
+    for row in range(2,x+2):
+        ws2['A'+str(row)].value = success[row-2]
+    for row in range(2,y+2):
+        ws2['B'+str(row)].value = fail[row-2]
+    wb.save(server_info_path)
+    # wb.close()
+
+
+
+if __name__ == '__main__':
+    main()
