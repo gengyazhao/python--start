@@ -1,1 +1,64 @@
 pip install cx-Oracle==8.0.1
+# 设置pip镜像源为华为源
+C:\Users\Administrator>pip config set global.trusted-host repo.huaweicloud.com
+
+# pip配置文件目录C:\Users\Administrator\AppData\Roaming\pip\pip.ini
+Writing to C:\Users\Administrator\AppData\Roaming\pip\pip.ini
+
+# 修改pip配置文件
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+extra-index-url = https://pypi.tuna.tsinghua.edu.cn/simple/
+	https://repo.huaweicloud.com/repository/pypi/simple
+	http://pypi.douban.com/simple/
+	https://pypi.mirrors.ustc.edu.cn/simple/3
+	https://pypi.org/simple/
+trusted-host = mirrors.aliyun.com
+	pypi.tuna.tsinghua.edu.cn
+	repo.huaweicloud.com
+	pypi.douban.com
+	pypi.mirrors.ustc.edu.cn
+	pypi.org
+timeout = 120
+
+# linux配置文件目录在根目录下创建/修改～/.pip/pip.confpip配置文件
+[global]
+index-url=http://pypi.douban.com/simple
+[install]
+trusted-host=pypi.douban.com
+
+
+# 临时换源处理
+pip install beautifulsoup4 --trusted-host mirrors.aliyun.com
+pip install django -i http://pypi.douban.com/simple
+
+
+# 查看安装的库文件和版本
+pip list
+
+# 更新pip版本（默认升级到最新版本）
+python -m -pip install --upgrade pip
+# 强制重新安装pip
+python -m pip install --upgrade --force-reinstall pip
+# 更新到指定版本pip
+python -m pip install --upgrade pip==18.0
+
+# 强制重新安装指定版本库
+pip install --force-reinstall -v "Pillow==9.5.0"
+
+# 将项目依赖库文件信息保存到requirements.txt文件中
+pip freeze > d:/requirements.txt
+
+# 安装requirements.txt文件中的库
+pip install -r requirement.txt
+
+
+
+'pip' 不是内部或外部命令，也不是可运行的程序或批处理文件。
+
+# 解决办法设置环境变量
+D:\Program Files\Python310\Scripts\
+D:\Program Files\Python310\
+或
+D:\Users\Administrator\AppData\Local\Programs\Python\Python38\
+D:\Users\Administrator\AppData\Local\Programs\Python\Python38\Scripts\
