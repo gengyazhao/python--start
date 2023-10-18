@@ -1,0 +1,266 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By g84114734
+# @Create_time: 2023/10/16
+# @File Name: tools_gui
+# 打包命令pyinstaller -F package\tools_gui
+# pyinstaller -F --noconsole --icon=shutDownServers\shutdown.ico shutDownServers\tools_gui.py
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+from tkinter import *
+import subprocess
+import openpyxl
+import time
+# import threading
+import paramiko
+from tkinter import filedialog
+
+threads = []
+success = []
+fail = []
+
+
+class Application(Frame):
+    def __init__(self,master=None):
+        super().__init__(master)
+        self.master = master
+        self.pack()
+        self.create_widget()
+
+    def create_widget(self):
+        """创建组件"""
+
+        self.ip_label = Label(self, text="IP地址:")
+        self.ip_label.grid(row=0,column=0)
+        ip = StringVar()
+        self.ip_entry = Entry(self, textvariable=ip)
+        self.ip_entry.grid(row=0,column=1)
+
+        self.user_label = Label(self, text="用户名:")
+        self.user_label.grid(row=0,column=2)
+        user = StringVar()
+        self.user_entry = Entry(self, textvariable=user)
+        self.user_entry.grid(row=0,column=3)
+        user.set(r"china\administrator")
+
+
+        self.pwd_label = Label(self, text="密码:")
+        self.pwd_label.grid(row=0,column=4)
+        # tkinter.BooleanVar/IntVar/DoubleVar/StringVar
+        # StringVar变量绑定到指定的组件，组件内容发生变化，StringVar变量的值也发生变化
+        pwd = StringVar()
+        self.pwd_entry = Entry(self, textvariable=pwd)
+        self.pwd_entry.grid(row=0,column=5)
+
+        self.system_type_label = Label(self, text='系统类型:')
+        self.system_type_label.grid(row=0,column=6)
+        system_type = StringVar()
+        self.system_type_entry = Entry(self,textvariable=system_type)
+        self.system_type_entry.grid(row=0,column=7)
+        system_type.set(r"Windows")
+
+        self.shutdow_bt = Button(self, text="关机", command=self.execute_shutdown, fg='white',bg='#009688',activebackground='#ab47bc',activeforeground='#ffffff')
+        self.shutdow_bt.grid(row=0,column=8,padx=5)
+        self.reboot_bt = Button(self, text="重启", command=self.execute_reboot, fg='white',bg='#009688',activebackground='#ab47bc',activeforeground='#ffffff')
+        #外边距padx;pady   内边距ipadx;ipady
+        self.reboot_bt.grid(row=0,column=9,padx=5)
+
+        self.server_info_label = Label(self, text="批量关机配置文件:")
+        self.server_info_label.grid(row=1,column=0)
+        server_info = StringVar()
+        self.server_info_entry = Entry(self, textvariable=server_info)
+        self.server_info_entry.grid(row=1,column=1)
+
+        self.open_file_bt = Button(self, text="打开",command=self.openFile, fg='white',bg='#009688',activebackground='#ab47bc',activeforeground='#ffffff')
+        self.open_file_bt.grid(row=1,column=2)
+
+        self.multi_shutdown = Button(self, text="批量关机", command=self.run_main, fg='white',bg='#009688',activebackground='#ab47bc',activeforeground='#ffffff')
+        self.multi_shutdown.grid(row=1,column=3,padx=25)
+
+        self.result_label = Label(self, text="结果显示：")
+        self.result_label.grid(row=3,column=2,pady=10)
+        self.result_Text = Text(self)
+        self.result_Text.grid(row=4,column=0,columnspan=8,rowspan=4)
+
+
+    def multi_thread(self,threads):
+    #线程数
+        k = 5
+        ts = time.time()
+        m = len(threads) //  k
+        n = len(threads) % k
+        if m >= 1:
+            for i in range(1,m+1):
+                for thread in threads[(i-1)*k:i*k]:
+                    thread.start()
+                for thread in threads[(i-1)*k:i*k]:
+                    thread.join()
+            for thread in threads[k*m:k*m+n]:
+                thread.start()
+            for thread in threads[k*m:k*m+n]:
+                thread.join()
+        else :
+            for thread in threads :
+                thread.start()
+            for thread in threads :
+                thread.join()
+        te = time.time()
+        print(te-ts)
+
+    def execute_shutdown(self):
+        ip = self.ip_entry.get()
+        user = self.user_entry.get()
+        pwd = self.pwd_entry.get()
+        flag = self.system_type_entry.get()
+        self.force_shutdown(ip,user,pwd,flag)
+
+    def execute_reboot(self):
+        ip = self.ip_entry.get()
+        user = self.user_entry.get()
+        pwd = self.pwd_entry.get()
+        flag = self.system_type_entry.get()
+        self.force_reboot(ip,user,pwd,flag)
+
+    def force_reboot(self,ip,user,pwd,flag):
+        if flag:
+            # for test
+            # cmd = "ping -n 2 -w 5 %s" % ip
+            # res = subprocess.call(cmd,stdout=subprocess.PIPE)
+
+            cmd = 'net use \\\\%s\ipc$ "%s" /user:"%s"' % (ip,pwd,user)
+            cmd1 = 'shutdown -r -m \\\\%s -t 0 -f' % (ip)
+            cmd2 = 'net use * /del /y'
+            subprocess.call(cmd,stdout=subprocess.PIPE)#linux系统将-n改成-c
+            res = subprocess.call(cmd1,stdout=subprocess.PIPE)#linux系统将-n改成-c
+            subprocess.call(cmd2, stdout=subprocess.PIPE)
+            if res ==0:
+                msg = ip + "重启" + str(True if res == 0 else False)
+                success.append(ip)
+            else:
+                msg = ip + "重启" + str(True if res == 0 else False)
+                fail.append(ip)
+        else:
+            try:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(ip,username=user,port=22,password=pwd)
+                # for test
+                # ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("pwd")
+
+                ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("reboot")
+                # print(ssh_stdout.read())
+                ssh.close()
+                success.append(ip)
+                msg = ip + "重启" + str(True)
+            except Exception as e:
+                msg = ip + "重启" + str(False) +"\n" + str(e)
+                fail.append(ip)
+        self.write_log_to_Text(msg)
+
+
+    def force_shutdown(self,ip,user,pwd,flag):
+        if flag:
+            # for test
+            # cmd = 'ping -n 2 -w 5 %s' % (ip)
+            # res = subprocess.call(cmd,stdout=subprocess.PIPE)
+
+            cmd = 'net use \\\\%s\ipc$ "%s" /user:"%s"' % (ip,pwd,user)
+            cmd1 = 'shutdown -s -m \\\\%s -t 0 -f' % (ip)
+            subprocess.call(cmd,stdout=subprocess.PIPE)
+            res = subprocess.call(cmd1,stdout=subprocess.PIPE)
+            cmd2 = 'net use * /del /y'
+            subprocess.call(cmd2, stdout=subprocess.PIPE)
+            if res == 0:
+                msg = ip + "关机" + str(True if res == 0 else False)
+                success.append(ip)
+            else:
+                msg = ip + "关机" + str(True if res == 0 else False)
+                fail.append(ip)
+        else:
+            try:
+                ssh = paramiko.SSHClient()
+                ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                ssh.connect(ip,username=user,port=22,password=pwd)
+                # for test
+                # ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("pwd")
+
+                ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command("shutdown -h 1")
+                # print(ssh_stdout.read())
+                ssh.close()
+                msg = ip + "关机" + str(True)
+                success.append(ip)
+            except Exception as e:
+                msg = ip + "关机" + str(False) + "\n" + str(e)
+                fail.append(ip)
+        self.write_log_to_Text(msg)
+
+    def run_main(self):
+        # for test
+        # base_path = os.getcwd()
+        # server_info_path = base_path + r"\server_info.xlsx"
+        server_info_path = self.server_info_entry.get()
+        work_sheet_name1 = "servers"
+        work_sheet_name2 = "log"
+        wb = openpyxl.load_workbook(server_info_path)
+        names = wb.sheetnames
+        if work_sheet_name1 not in names:
+            wb[names[0]].title = work_sheet_name1
+        if work_sheet_name2 not in names:
+            wb[names[1]].title = work_sheet_name2
+
+        info_server_sheet = wb[work_sheet_name1]
+        log_sheet = wb[work_sheet_name2]
+        flag = False
+        for row in info_server_sheet.rows:
+            if flag:
+                ip = row[0].value
+                user = row[1].value
+                pwd = row[2].value
+                type = row[3].value
+                if "indows" in type:
+                    win_flag = True
+                else:
+                    win_flag = False
+                self.force_shutdown(ip,user,pwd,win_flag)
+                # t = threading.Thread(target=self.force_shutdown,args=(ip,user,pwd,win_flag,))
+                # threads.append(t)
+                # force_shutdown(ip,user,pwd)
+            flag = True
+        # self.multi_thread(threads)
+        m = len(success)
+        n = len(fail)
+        for row in range(2,m+2):
+            log_sheet['A'+str(row)].value = success[row-2]
+
+        for row in range(2,n+2):
+            log_sheet['B'+str(row)].value =fail[row-2]
+        wb.save(server_info_path)
+
+    def openFile(self):
+        # file_path = filedialog.askopenfile('r')
+        # file_path = filedialog.askdirectory()
+        file_path = filedialog.askopenfilename()
+        self.server_info_entry.delete(0,END)
+        self.server_info_entry.insert(0,file_path)
+
+    def write_log_to_Text(self,msg):
+        current_time = time.strftime('%Y-%m-%d %H:%M:%S   ',time.localtime(time.time()))
+        content = current_time + msg + '\n'
+        self.result_Text.insert(END,content)
+
+
+def main():
+    root = Tk()
+    root.geometry("1000x600+200+200")
+    root.title("test myGui")
+    Application(master=root)
+    root.mainloop()
+
+
+if __name__ == '__main__':
+    main()
