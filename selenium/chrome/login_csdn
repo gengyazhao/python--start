@@ -1,0 +1,66 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2023 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2023/10/21 21:45
+# @File Name: get_driver
+# 打包命令pyinstaller -F package\get_driver
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import os, time, re
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+# from selenium.common import StaleElementReferenceException
+
+def get_driver(url):
+    # 关闭保存密码提示框，关闭不安全提示
+    prefs = {"":""}
+    prefs["credentials_enable_service"] = False
+    prefs["profile.password_manager_enabled"] = False
+    options = webdriver.ChromeOptions()
+    options._binary_location = r'D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chrome.exe'
+    driver_path = r"D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chromedriver.exe"
+    # 执行完后不自动关闭浏览器
+    options.add_experimental_option('detach',True)
+    # 关闭保存密码提示框，
+    options.add_experimental_option('prefs', prefs)
+    options.add_argument("--window-size=1920,1080")
+    # 浏览器窗口最大化
+    options.add_argument('--start-maximized')
+    # 不显示浏览器
+    # options.add_argument("--headless")
+    options.add_argument('--disable-gpu')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--ignore-certificate-errors')
+    # 如何去掉提示“正受到自动测试软件控制”
+    options.add_experimental_option("excludeSwitches", ['enable-automation'])
+    # 不显示图片
+    # options.add_argument('blink-settings-imagesEnabled=false')
+    service = Service(executable_path=driver_path)
+    driver = webdriver.Chrome(service=service,options=options)
+    driver.get(url)
+    return driver
+def main():
+    url = r'https://www.csdn.net/'
+    driver = get_driver(url=url)
+    driver.find_element(By.CLASS_NAME, "toolbar-btn-loginfun").click()
+    time.sleep(1)
+    driver.switch_to.window(driver.window_handles[-1])
+    # //*[@id="passportbox"]/iframe
+    driver.switch_to.frame("passport_iframe")
+
+    driver.find_element(By.XPATH, '//div[@class="login-box-tabs-items"]/span[4]').click()
+    driver.find_element(By.XPATH, '//input[@class="base-input-text" and @autocomplete="username"]').send_keys("xxx")
+    driver.find_element(By.XPATH, '//input[@class="base-input-text" and @autocomplete="current-password"]').send_keys("xxx")
+    driver.find_element(By.XPATH, '//div[@class="inform-title"]/i').click()
+    driver.find_element(By.CLASS_NAME, "base-button").click()
+
+
+if __name__ == "__main__":
+    main()
