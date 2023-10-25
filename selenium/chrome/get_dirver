@@ -7,8 +7,8 @@ def get_driver(url):
     prefs["credentials_enable_service"] = False
     prefs["profile.password_manager_enabled"] = False
     options = webdriver.ChromeOptions()
-    options._binary_location = r'C:\chrome\Chrome-bin\chrome.exe'
-    driver_path = r"C:\chrome\Chrome-bin\chromedriver.exe"
+    options._binary_location = r'D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chrome.exe'
+    driver_path = r"D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chromedriver.exe"
     # 执行完后不自动关闭浏览器
     options.add_experimental_option('detach',True)
     # 关闭保存密码提示框，
