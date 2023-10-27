@@ -6,11 +6,15 @@ def get_driver(url):
     prefs = {"":""}
     prefs["credentials_enable_service"] = False
     prefs["profile.password_manager_enabled"] = False
+prefs["safebrowsing.enabled"] =  True
+prefs["download.default_ directory"] = r"c:\download"
     options = webdriver.ChromeOptions()
     options._binary_location = r'D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chrome.exe'
     driver_path = r"D:\Program Files\chrome\112.0.5615.138\chrome\Chrome-bin\chromedriver.exe"
     # 执行完后不自动关闭浏览器
     options.add_experimental_option('detach',True)
+options.add_experimental_option("--safebrowsing-disable-download-protection")
+options.add_experimental_option("--safebrowsing-disable-extension-blacklist")
     # 关闭保存密码提示框，
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--window-size=1920,1080")
