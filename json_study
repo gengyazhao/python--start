@@ -1,0 +1,30 @@
+#如果你要处理的是文件而不是字符串，你可以使用 json.dump() 和 json.load() 来编码和解码JSON数据
+import json
+import codecs
+
+def main():
+    #python 字典类型
+    data = {
+        'no' : 1,
+        'name' : 'gyz',
+        'url' : 'http://www.huawei.com'
+    }
+    #JSON 对象
+    json_str = json.dumps(data)
+    print("Python 原始数据：",repr(data))
+    print("JSON对象：",json_str)
+
+    #JSON 对象转换为python字典类型
+    data2 = json.loads(json_str)
+    print("data2['name']:",data2['name'])
+    #写入JSON数据
+    with open('data.json','w',encoding='utf-8') as f:
+        json.dump(data,f)
+
+    #读取JSON数据
+    with open('mml_res.json','r',encoding='utf-8') as f:
+        mml_res = json.load(f)
+        print(mml_res)
+
+if __name__ == '__main__':
+    main()
