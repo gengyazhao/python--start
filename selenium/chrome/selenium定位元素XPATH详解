@@ -1,0 +1,87 @@
+selenium定位失败的几个坑：
+1、窗口跳转，定位失败
+driver.switch_to.window(driver.window_handles[-1])#定位到最新打开窗口
+driver.switch_to.default_content() #返回主页面
+2、iframe跳转，定位失败
+driver.switch_to.parent_frame() # 跳转到上一级iframe
+driver.switch_to.frame("id_value/name_value/class_value")
+3、定位元素的class属性中有空格
+class中有空格的元素不能使用By.CLASS_NAME直接定位，可以使用By.CSS_SELECTOR或By.XPATH定位
+eg: <button class="abc xyz">
+driver.find_element(By.CSS_SELECTOR,".abc.xyz")
+driver.find_element(By.XPATH,"//*[starts-with(@class,'abc') and ends-with(@class, 'xyz')]")
+4、定位的元素还没有加载完成
+time.sleep(2)
+
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+# 等待120秒，0.1秒查询一次，直到元素出现
+WebDriverWait(driver,120,0.1).until(lambda driver:driver.find_element(By.XPATH,"//*[starts-with(@class,'abc') and ends-with(@class, 'xyz')]").click())
+
+selenium定位元素的八种方法：
+from selenium.webdriver.common.by import By
+from selenium import webdriver
+
+#service = Service(executable_path=driver_path)
+#driver = webdriver.Chrome(service=service,options=options)
+
+三种基础定位方法：ID，NAME，CLASS_NAME
+driver.find_element(By.ID,"xxx")
+driver.find_element(By.NAME,"xxx")
+driver.find_element(By.CLASS_NAME,"xxx")
+这三种方法比较基础，优先使用ID定位，name和class可能有多个重复值。
+# 不推荐使用TAG_NAME,标签名称容易重复，当出现多个相同标签时，定位到第一个元素
+driver.find_element(By.TAG_NAME,"xxx")
+
+#定位文本与部分文本，By.PARTIAL_LINK_TEXT是模糊查找部分文本内容
+driver.find_element(By.LINK_TEXT,"xxx")
+driver.find_element(By.PARTIAL_LINK_TEXT,"xxx")
+
+#By.CSS_SELECTOR  class="abc xyz"
+driver.find_element(By.CSS_SELECTOR,".abc.zyx")
+#By.CSS_SELECTOR  id="abc"
+driver.find_element(By.CSS_SELECTOR,"#abc")
+# attribute属性  
+#element[attribute]  匹配带有file属性的div元素
+driver.find_element(By.CSS_SELECTOR,"div[file]")
+#element[attribute='value']  匹配name属性值为abc的div
+driver.find_element(By.CSS_SELECTOR,"div[name='abc']")
+# 匹配多个属性
+driver.find_element(By.CSS_SELECTOR,"div[name='abc'][type='text']")
+# ~匹配name部分属性值
+driver.find_element(By.CSS_SELECTOR,"div[name~='abc']")
+# ^匹配name属性值以abc开头
+driver.find_element(By.CSS_SELECTOR,"div[name^='abc']")
+# $匹配name属性值以abc结束
+driver.find_element(By.CSS_SELECTOR,"div[name$='abc']")
+# *匹配name属性值包含abc
+driver.find_element(By.CSS_SELECTOR,"div[name$='abc']")
+# |匹配name属性值以abc开头并且使用连接符 "-" 分隔的标签div
+driver.find_element(By.CSS_SELECTOR,"div[name|='abc']")
+
+# XPATH
+# 匹配id='abc'的任意标签名
+driver.find_element(By.XPATH,"//*[@id='abc']")
+# 匹配id='abc'的button标签
+driver.find_element(By.XPATH,"//button[@id='abc']")
+# 匹配id='abc'并且name='xyz'的任意标签名
+driver.find_element(By.XPATH,"//*[@id='abc' and @name='xyz']")
+# 匹配文本内容包含'abc'的任意标签名
+driver.find_element(By.XPATH,"//*[contains(text(),'abc')]")
+# 匹配id内容包含'abc'的任意标签名
+driver.find_element(By.XPATH,"//*[contains(@id,'abc')]")
+# 匹配class以abc开始的任意标签
+driver.find_element(By.XPATH,"//*[starts-with(@class,'abc')]")
+# 匹配文本以abc开始的任意标签
+driver.find_element(By.XPATH,"//*[starts-with(text(),'abc')]")
+# 匹配class以abc结束的任意标签
+driver.find_element(By.XPATH,"//*[ends-with(@class,'abc')]")
+# 匹配class以abc开始并且class以xyz结束的任意标签
+driver.find_element(By.XPATH,"//*[starts-with(@class,'abc') and ends-with(@class, 'xyz')]")
+# 正则表达式
+driver.find_element(By.XPATH,"//*[matchs(text(),'\d+')]")
+# 文本内容='abc'
+driver.find_element(By.XPATH,"//a[text(),'abc']")
+# 文本中包含abc
+driver.find_element(By.XPATH,"//a[contains(text(),'abc')]")
+
