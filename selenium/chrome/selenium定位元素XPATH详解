@@ -58,6 +58,25 @@ driver.find_element(By.CSS_SELECTOR,"div[name$='abc']")
 driver.find_element(By.CSS_SELECTOR,"div[name$='abc']")
 # |匹配name属性值以abc开头并且使用连接符 "-" 分隔的标签div
 driver.find_element(By.CSS_SELECTOR,"div[name|='abc']")
+# 关系选择器
+# 1、后代选择器：选定元素div所有的后代元素pre，包含所有子孙
+driver.find_element(By.CSS_SELECTOR,"div pre")
+# 2、子代选择器：选定元素div所有的子代元素pre，不包含孙代元素
+driver.find_element(By.CSS_SELECTOR,"div>pre")
+# 3、相邻选择器：选定元素div之后且同属一个父元素的相邻兄弟元素div（一个）
+driver.find_element(By.CSS_SELECTOR,"div+div")
+# 4、兄弟选择器:选定元素div之后且同属一个父元素的所有兄弟元素div（可能多个）
+driver.find_element(By.CSS_SELECTOR,"div~div")
+# 5、element:not(s) 匹配不含有s选择符的元素
+driver.find_element(By.CSS_SELECTOR,"div:not(:last-child)")
+driver.find_element(By.CSS_SELECTOR,"div:not(id='xxx')")
+
+# 6、element:first-child元素的第一个子类  element:last-child元素的最后一个子类
+driver.find_element(By.CSS_SELECTOR,"div:first-child")
+driver.find_element(By.CSS_SELECTOR,"div:last-child")
+
+
+
 
 # XPATH
 # 匹配id='abc'的任意标签名
