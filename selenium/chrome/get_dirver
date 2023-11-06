@@ -4,11 +4,14 @@ from selenium.webdriver.chrome.service import Service
 def get_driver(url):
     # 关闭保存密码提示框，关闭不安全提示
     prefs = {"":""}
+    # 是否启用凭据服务
     prefs["credentials_enable_service"] = False
+    # 是否启用密码管理器配置文件
     prefs["profile.password_manager_enabled"] = False
-    # 关闭下载保护
+    # 启用安全浏览器模式
     #prefs["safebrowsing.enabled"] =  True
     prefs["safebrowsing.enabled"] =  False
+    # 设置浏览器默认下载目录
     prefs["download.default_ directory"] = r"c:\download"
 
     options = webdriver.ChromeOptions()
@@ -23,15 +26,16 @@ def get_driver(url):
 
     # 关闭保存密码提示框，
     options.add_experimental_option('prefs', prefs)
+    # 设置浏览器分辨率
     options.add_argument("--window-size=1920,1080")
     # 浏览器窗口最大化
     options.add_argument('--start-maximized')
     # 不显示浏览器
-    options.add_argument("--headless")
+    options.add_argument("--headless=new")
     # 禁用GPU
     options.add_argument('--disable-gpu')
     options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox')# linux only
     # 忽略证书错误
     options.add_argument('--ignore-certificate-errors')
     # 如何去掉提示“正受到自动测试软件控制”
