@@ -75,6 +75,15 @@ driver.find_element(By.CSS_SELECTOR,"div:not(id='xxx')")
 driver.find_element(By.CSS_SELECTOR,"div:first-child")
 driver.find_element(By.CSS_SELECTOR,"div:last-child")
 
+# element:nth-child(x)  匹配父元素的第x个div；x可以写成2n,或者odd奇数子元素，even偶数子元素
+driver.find_element(By.CSS_SELECTOR,"div:nth-child(3)")
+# element:nth-last-child(x)  匹配倒数第x个子元素div
+driver.find_element(By.CSS_SELECTOR,"div:nth-last-child(2)")
+# element:first-of-type  匹配第一个为input的子元素;element:last-of-type  匹配最后一个为input的子元素
+driver.find_element(By.CSS_SELECTOR,"input:first-of-type")
+# element:nth-of-type(n)  匹配同类型中第n个同级子元素； element:nth-last-of-type(n)  匹配同类型中倒数第n个同级子元素
+# element:checked  匹配用户界面上处于选中状态的元素，(用于input type为radio与checkbox时)
+
 
 
 
