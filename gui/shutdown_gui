@@ -107,7 +107,7 @@ class Application(Frame):
         self.st.grid()
 
 
-        def add(self)
+    def add(self)
         self.v=StringVar()
         self.v.set("F")
         self.ck=Checkbutton(self.st,text=msg,variable=self.values,onvalue="T"，offvalue="F")
