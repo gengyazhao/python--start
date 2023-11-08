@@ -98,21 +98,21 @@ class Application(Frame):
         self.result_Text = Text(self)
         self.result_Text.grid(row=4,column=0,columnspan=8,rowspan=4)
 
-v1=StringVar()
-self.v1_combobox=Combobox(self, values=v1)
-self.v1_combobox["value"]=("x","y")
-self.v1_combobox.current(0)
-self.v1_combobox.grid()
-self.st=ScrolledText(self)
-self.st.grid()
+        v1=StringVar()
+        self.v1_combobox=Combobox(self, values=v1)
+        self.v1_combobox["value"]=("x","y")
+        self.v1_combobox.current(0)
+        self.v1_combobox.grid()
+        self.st=ScrolledText(self)
+        self.st.grid()
 
 
-def add(self)
-self.v=StringVar()
-self.v.set("F")
-self.ck=Checkbutton(self.st,text=msg,variable=self.values,onvalue="T"，offvalue="F")
-self.st.window_create("end",window=self.ck)
-self.st.insert("end","\n")
+        def add(self)
+        self.v=StringVar()
+        self.v.set("F")
+        self.ck=Checkbutton(self.st,text=msg,variable=self.values,onvalue="T"，offvalue="F")
+        self.st.window_create("end",window=self.ck)
+        self.st.insert("end","\n")
     def multi_thread(self,threads):
     #线程数
         k = 5
