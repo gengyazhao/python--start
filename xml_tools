@@ -1,0 +1,32 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2024 GengYaZhao.All rights reserved
+# @Create By GengYaZhao
+# @Create_time: 2024/7/31 21:38
+# @File Name: xmlTools
+# 打包命令pyinstaller -F package\xmlTools
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import os
+import time
+import re
+import xml.etree.ElementTree as ET
+
+base_path = os.getcwd()
+source_xml_path = base_path + r'\application.xml'
+
+def main():
+    tree = ET.parse(source=source_xml_path, parser=ET.XMLParser(encoding='iso-8859-5'))
+
+    root = tree.getroot()
+    for data in root.iter():
+        print(data.text)
+    pass
+
+
+if __name__ == "__main__":
+    main()
