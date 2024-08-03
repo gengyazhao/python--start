@@ -1,3 +1,12 @@
+import datetime
+
+def main():
+    time = datetime.datetime.now()
+    print(time)
+    print(datetime.datetime.strftime(time,'%Y年-%m月-%d日 %H:%M:%S'))
+
+
+
 import time
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time()))
 t = time.localtime()
