@@ -20,12 +20,14 @@ base_path = os.getcwd()
 source_xml_path = base_path + r'\application.xml'
 
 def main():
+    # ET.register_namespace('spec','1.0.0')
     tree = ET.parse(source=source_xml_path, parser=ET.XMLParser(encoding='iso-8859-5'))
 
     root = tree.getroot()
     for data in root.iter():
         print(data.text)
-    pass
+    #防止空内容标签自闭合
+    tree.write(save_aspath, xml_declaration=False, short_empty_elements=False)
 
 
 if __name__ == "__main__":
