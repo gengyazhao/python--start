@@ -1,0 +1,86 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By g84114734
+# @Create_time: 2025/4/17
+# @File Name: ds671B
+# 打包命令pyinstaller -F package\ds671B
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+
+import pyttsx3
+import os
+import re
+def text_to_speech_by_chapter(input_file, output_folder):
+    """
+    将TXT文件按章节转换为多个语音文件
+
+    参数:
+        input_file (str): 输入的TXT文件路径
+        output_folder (str): 输出语音文件的文件夹路径
+    """
+    # 初始化语音引擎
+    input_file = input_file.strip('\u202a\u202b\u202c')
+    engine = pyttsx3.init()
+
+    # 设置语音属性（可选）
+    engine.setProperty('rate', 150)  # 语速
+    engine.setProperty('volume', 0.9)  # 音量
+
+    # 创建输出文件夹（如果不存在）
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # 读取输入文件
+    # with open (input_file, 'r', encoding='utf-8') as file:
+    #     content = file.read()
+    with open(input_file, 'rb') as file:
+        content = file.read().decode('gbk')
+
+    # 使用正则表达式分割章节
+    # 匹配"第X章"或"第XX章"或"第XXX章"等，后面跟着章节标题
+    chapter_pattern = re.compile(r'(第[一二三四五六七八九十百千万零\d]+章[^\n]*)')
+    chapters = chapter_pattern.split(content)
+
+    # 第一个元素可能是空字符串或非章节内容
+    if len(chapters) > 1 and not chapter_pattern.match(chapters[0]):
+        chapters = chapters[1:]
+
+    # 确保章节和内容成对出现
+    if len(chapters) % 2 != 0:
+        print("警告：章节分割可能不正确")
+
+    # 处理每个章节
+    for i in range(0, len(chapters), 2):
+        if i + 1 >= len(chapters):
+            break
+
+        chapter_title = chapters[i].strip()
+        chapter_content = chapters[i+1].strip()
+
+        if not chapter_title or not chapter_content:
+            continue
+
+        # 清理文件名中的非法字符
+        safe_title = re.sub(r'[\\/*?:"<>|]', '', chapter_title)
+        output_file = os.path.join(output_folder, f"{safe_title}.mp3")
+
+        print(f"正在处理: {chapter_title}...")
+
+        # 保存语音文件
+        engine.save_to_file(chapter_content, output_file)
+        engine.runAndWait()
+
+        print(f"已保存: {output_file}")
+if __name__ == "__main__":
+    # 输入文件路径
+    input_txt = r'‪D:\Download\dmbj.txt'  # 替换为你的TXT文件路径
+    # 输出文件夹路径
+    output_dir = r'd:\temp\audio_chapters'  # 语音文件将保存在此文件夹中
+
+    text_to_speech_by_chapter(input_txt, output_dir)
+    print("所有章节处理完成！")
