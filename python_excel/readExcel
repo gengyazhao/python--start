@@ -15,6 +15,7 @@ base_path = os.getcwd()
 excel_path = base_path + r'\myexcel.xlsx'
 sheet_name = r'bts'
 
+#data_only默认为False，读取Excel中的公式；data_only=True，读取Excel表格内容的值
 active_table = wb(excel_path, data_only=True)
 active_sheet = active_table[sheet_name]
 
