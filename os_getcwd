@@ -1,0 +1,4 @@
+别用os.getcwd()获取当前目录
+用base_path = os.path.dirname(os.path.abspath(__file__))
+os.getcwd()获取的是正在执行脚本的路径，如果A调用B，则是A所在的路径，如果A与B不在同一目录就会出错
+base_path = os.path.realpath(os.path.dirname(sys.argv[0]))
