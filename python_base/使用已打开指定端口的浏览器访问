@@ -1,0 +1,15 @@
+import chrome_Driver_V2 as chrome_Driver
+import os
+def open_chrome():
+    cmd = r'"C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 ' \
+          r'--user-data-dir="d:\chrome" '
+    d = os.popen(cmd)
+
+
+def login():
+    # 访问ATE地址
+    driver = chrome_Driver.get_driver(url)
+
+if __name__ == '__main__':
+    open_chrome()
+    driver = login()
