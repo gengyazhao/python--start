@@ -1,0 +1,118 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By g84114734
+# @Create_time: 2025/9/29
+# @File Name: shutdown_servers
+# 打包命令pyinstaller -F package\shutdown_servers
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import os
+import time
+import openpyxl
+from openpyxl.styles import PatternFill
+import threading
+from queue import Queue
+
+# 配置信息
+EXCEL_PATH = r'D:\Users\pbalongnw\PycharmProjects\automatic_operation\shutDownServers\server_info.xlsx'
+SHEET_NAME = 'windows'
+USERNAME = 'Administrator'
+PASSWORD = 'xxxxxx'  # 请替换为实际密码
+THREAD_COUNT = 5  # 并发线程数，可根据需要调整
+
+# 颜色定义
+SUCCESS_FILL = PatternFill(start_color='00FF00', end_color='00FF00', fill_type='solid')  # 绿色
+FAILURE_FILL = PatternFill(start_color='FF0000', end_color='FF0000', fill_type='solid')  # 红色
+
+# 线程共享队列和锁
+task_queue = Queue()
+result_dict = {}
+lock = threading.Lock()
+
+
+def shutdown_server(ip):
+    """通过net use命令远程关闭服务器"""
+    try:
+        # 建立网络连接
+        net_use_cmd = f"net use \\\\{ip}\\ipc$ {PASSWORD} /user:{USERNAME}"
+        os.system(net_use_cmd)
+
+        # 执行关机命令
+        shutdown_cmd = f"shutdown /s /m \\\\{ip} /t 0 /f"
+        return_code = os.system(shutdown_cmd)
+
+        # 断开连接
+        os.system(f"net use \\\\{ip}\\ipc$ /delete /y")
+
+        return return_code == 0
+    except Exception as e:
+        print(f"关闭服务器 {ip} 时出错: {e}")
+        return False
+
+
+def worker():
+    """工作线程函数"""
+    while True:
+        ip, row_idx = task_queue.get()
+        if ip is None:  # 终止信号
+            break
+
+        print(f"线程 {threading.current_thread().name} 正在处理服务器: {ip}")
+        success = shutdown_server(ip)
+
+        with lock:
+            result_dict[row_idx] = success
+
+        task_queue.task_done()
+
+
+def process_excel():
+    """处理Excel文件"""
+    try:
+        # 加载工作簿
+        wb = openpyxl.load_workbook(EXCEL_PATH)
+        sheet = wb[SHEET_NAME]
+
+        # 创建工作线程
+        threads = []
+        for i in range(THREAD_COUNT):
+            t = threading.Thread(target=worker, name=f"Thread-{i + 1}")
+            t.start()
+            threads.append(t)
+
+        # 将任务放入队列(IP和行索引)
+        for row_idx, row in enumerate(sheet.iter_rows(min_row=2, max_col=1), start=2):  # 从第2行开始
+            ip_cell = row[0]
+            if ip_cell.value:
+                task_queue.put((ip_cell.value.strip(), row_idx))
+
+        # 等待所有任务完成
+        task_queue.join()
+
+        # 添加终止信号
+        for _ in range(THREAD_COUNT):
+            task_queue.put((None, None))
+        for t in threads:
+            t.join()
+
+        # 更新结果到Excel
+        for row_idx, success in result_dict.items():
+            sheet.cell(row=row_idx, column=2).value = str(success)
+            sheet.cell(row=row_idx, column=2).fill = SUCCESS_FILL if success else FAILURE_FILL
+
+        # 保存Excel文件
+        wb.save(EXCEL_PATH)
+        print(f"所有服务器处理完成，共处理 {len(result_dict)} 台服务器")
+
+    except Exception as e:
+        print(f"处理Excel时出错: {e}")
+
+
+if __name__ == '__main__':
+    time.sleep(2000)
+    process_excel()
