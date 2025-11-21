@@ -92,6 +92,8 @@ driver.find_element(By.CSS_SELECTOR,"input:first-of-type")
 driver.find_element(By.XPATH,"//*[@id='abc']")
 # 匹配id='abc'的button标签
 driver.find_element(By.XPATH,"//button[@id='abc']")
+# 匹配placeholder="请选择运行截止时间"的input标签
+driver.find_element(By.XPATH, '//input[@placeholder="请选择运行截止时间"]')
 # 匹配id='abc'并且name='xyz'的任意标签名
 driver.find_element(By.XPATH,"//*[@id='abc' and @name='xyz']")
 # 匹配文本内容包含'abc'的任意标签名
