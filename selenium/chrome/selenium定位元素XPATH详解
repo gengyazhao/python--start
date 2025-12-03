@@ -115,3 +115,12 @@ driver.find_element(By.XPATH,"//a[text(),'abc']")
 # 文本中包含abc
 driver.find_element(By.XPATH,"//a[contains(text(),'abc')]")
 
+selenium 如何对select/option进行操作
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.action_chains import ActionChains
+
+el = driver.find_element(By.XPATH, '//*[@id="abc"]/tbody/tr[666]/td[6]')
+ActionChains(driver).double_click(el).perform()#双击进入编辑状态
+time.sleep(1)
+select_element = Select(driver.find_element(By.XPATH, '//*[@id="abc"]/tbody/tr[666]/td[6]/select'))
+select_element.select_by_value(UeType)#选择元素
