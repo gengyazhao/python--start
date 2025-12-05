@@ -1,0 +1,26 @@
+推荐使用
+base_path = os.path.dirname(os.path.abspath(__file__))
+base_path = os.path.realpath(os.path.dirname(sys.argv[0]))
+
+# 获取当前文件的绝对目录的3种方法
+os.path.abspath(__file__)
+os.path.realpath(__file__)
+sys.argv[0]
+__file__
+
+# 获取当前文件名称
+os.path.basename(__file__)
+# 获取当前文件所在目录，不包含文件名称
+os.path.dirname(__file__)
+
+别用os.getcwd()获取当前目录
+
+判断文件是否存在
+import os
+if os.path.exists(__file__):
+  print("文件存在")
+else:
+  print("文件不存在")
+
+获取的是正在执行脚本的路径，如果A调用B，则是A所在的路径，如果A与B不在同一目录就会出错
+os.getcwd()
