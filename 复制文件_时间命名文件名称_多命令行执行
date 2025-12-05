@@ -1,0 +1,61 @@
+#!/usr/bin
+# _*_ coding: UTF-8 _*_
+# Copyright (c) 2021 GengYu.All rights reserved
+# @Create By g84114734
+# @Create_time: 2025/12/4
+# @File Name: copy_file
+# 打包命令pyinstaller -F package\copy_file
+"""
+这个模块提供了
+
+"""
+__author__ = 'gyz'
+
+import os
+import subprocess
+from datetime import datetime
+
+
+def copy_remote_file(ip, remote_path, local_path, username=None, password=None):
+    """
+    复制远程共享文件到本地
+    :param ip: 远程电脑IP
+    :param remote_path: 远程文件路径
+    :param local_path: 本地保存路径
+    :param username: 用户名 (可选)
+    :param password: 密码 (可选)
+    """
+    try:
+        # 确保目标目录存在
+        os.makedirs(os.path.dirname(local_path), exist_ok=True)
+        commands = fr'''net use \\{ip}\d$ /user:{username} {password}&&copy {remote_path} {local_path}&&net use \\{ip}\d$ /delete'''
+        # 复制文件
+        subprocess.run(commands, shell=True, capture_output=True, text=True)
+    except Exception as e:
+        print(f"复制文件失败: {str(e)}")
+    finally:
+        if os.path.exists(local_path):
+            print(f"成功复制文件到: {local_path}")
+        else:
+            print("本地文件不存在，可能复制失败了")
+
+
+if __name__ == "__main__":
+    # 配置参数
+    ip: str = "6.6.6.6"
+    LOCAL_FILE_NAME_FORMAT = "%Y-%m-%d-%H-%M-%S"
+    SOURCE_FILE_NAME_FORMAT = "%Y-%m-%d"
+    LOCAL_FILE = datetime.now().strftime(LOCAL_FILE_NAME_FORMAT)
+    SOURCE_FILE = datetime.now().strftime(SOURCE_FILE_NAME_FORMAT)
+    SOURCE_FILE_NAME = r"\\%s\d$\IA_log\default.log.%s" % (ip, SOURCE_FILE)
+    LOCAL_FILE_NAME = r"D:\Users\pbalongnw\PycharmProjects\FactoryService\read_ia_log\default.log.%s_%s" % (
+        LOCAL_FILE, ip)
+
+    # 交互式输入凭据（避免硬编码密码）
+    # username = input("请输入用户名 (user1): ") or "user1"
+    # password = getpass("请输入密码: ") or "password"
+    username: str = r"xxx"
+    password: str = r"xxx"
+
+    # 执行复制
+    copy_remote_file(ip, SOURCE_FILE_NAME, LOCAL_FILE_NAME, username, password)
