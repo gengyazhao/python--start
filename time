@@ -1,5 +1,16 @@
-import datetime
+from datetime import datetime
 
+ip: str = "6.6.6.6"
+LOCAL_FILE_NAME_FORMAT = "%Y-%m-%d-%H-%M-%S"
+SOURCE_FILE_NAME_FORMAT = "%Y-%m-%d"
+LOCAL_FILE = datetime.now().strftime(LOCAL_FILE_NAME_FORMAT)
+SOURCE_FILE = datetime.now().strftime(SOURCE_FILE_NAME_FORMAT)
+SOURCE_FILE_NAME = r"\\%s\d$\IA_log\default.log.%s" % (ip, SOURCE_FILE)
+LOCAL_FILE_NAME = r"D:\Users\pbalongnw\PycharmProjects\FactoryService\read_ia_log\default.log.%s_%s" % (
+    LOCAL_FILE, ip)
+
+
+import datetime
 def main():
     time = datetime.datetime.now()
     print(time)
