@@ -22,6 +22,10 @@ list.pop([index=-1])            移除列表中的一个元素（默认最后一
 list.remove(obj)                移除列表中某个值的第一个匹配项
 list.reverse()          反向列表中元素
 list.sort( key=None, reverse=False)     对原列表进行排序
-list.copy()             复制列表
+list.copy()             复制列表，返回列表的浅拷贝。相当于 a[:]
+直接赋值：其实就是对象的引用（别名），都指向同一个对象。
+浅拷贝(copy)：拷贝父对象，不会新建对象的内部的子对象。 浅拷贝的子对象还是指向统一对象（是引用）
 
+深拷贝(deepcopy)： copy 模块的 deepcopy 方法，完全拷贝了父对象及其子对象，是新建了一个新的对象及其子对象，两者是完全独立的
+list.clear()    删除列表里的所有元素，相当于 del a[:]
 '''
